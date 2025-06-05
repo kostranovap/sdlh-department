@@ -281,6 +281,9 @@ def load_mysql_data():
                     db.session.add(program)
                 loaded_counts['programs'] = len(data['programs'])
             
+            # Коммитим пользователей, услуги и программы ПЕРЕД заявлениями
+            db.session.commit()
+            
             # Загружаем новости
             if 'news' in data:
                 for news_data in data['news']:
