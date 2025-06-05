@@ -40,6 +40,7 @@
     </div>
 
     <div class="admin-section">
+        <!-- DEBUG: news type: {{ news.__class__.__name__ if news else 'None' }}, items count: {{ news.items|length if news and news.items else 'N/A' }} -->
         {% if news.items %}
         <div class="news-table">
             <div class="table-header">
@@ -112,7 +113,7 @@
             <p>Новости не найдены</p>
             <a href="{{ url_for('admin.create_news') }}" class="btn-add">+ Создать первую новость</a>
         </div>
-                 {% endif %}
+        {% endif %}
      </div>
 </div>
 </div>
