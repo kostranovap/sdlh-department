@@ -1,9 +1,15 @@
-{% extends "admin/base.html" %}
+{% extends "base.html" %}
 
-{% block title %}Управление услугами и программами{% endblock %}
+{% block title %}Управление услугами и программами - Админ-панель{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Админ-панель</a></li>
+<li class="breadcrumb-item">Услуги и программы</li>
+{% endblock %}
 
 {% block content %}
-<div class="admin-content">
+<div class="container">
+    <div class="admin-content">
     <div class="admin-header">
         <h1>Услуги и программы</h1>
         <div class="admin-actions">
@@ -171,6 +177,7 @@
         </div>
         {% endif %}
     </div>
+</div>
 </div>
 
 <style>
