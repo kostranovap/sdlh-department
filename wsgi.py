@@ -5,7 +5,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'backend'))
 
 from backend.app import create_app, db
-from backend.app.models import User, Article, Service, News, Program
+from backend.app.models import User, Article, Service, News, Program, Application
 from flask import Blueprint
 from datetime import datetime
 
