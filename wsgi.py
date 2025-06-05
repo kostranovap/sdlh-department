@@ -325,8 +325,9 @@ def load_mysql_data():
                         phone=app_data.get('phone', ''),
                         service_id=app_data.get('service_id'),
                         program_id=app_data.get('program_id'),
-                        message=app_data.get('message', ''),
-                        status=app_data.get('status', 'pending'),
+                        description=app_data.get('message', ''),
+                        application_type=app_data.get('application_type', 'service'),
+                        status=app_data.get('status', 'new'),
                         created_at=datetime.fromisoformat(app_data['created_at'].replace('Z', '+00:00')) if app_data.get('created_at') else datetime.utcnow()
                     )
                     db.session.add(application)
