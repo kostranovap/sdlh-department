@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app
 from flask_login import login_required, current_user
 from functools import wraps
-from app import db
-from app.models import User, Article, Service, Application, News, Program
+from .. import db
+from ..models import User, Article, Service, Application, News, Program
 from ..utils import save_image, delete_image, get_image_url, ensure_upload_folders
 from datetime import datetime
 

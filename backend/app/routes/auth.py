@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
-from app import db
-from app.models import User, Application
-from app.forms import LoginForm, RegistrationForm
+from .. import db
+from ..models import User, Application
+from ..forms import LoginForm, RegistrationForm
 from urllib.parse import urlparse
 
 # Создание blueprint для авторизации
@@ -35,7 +35,7 @@ def profile():
 @login_required
 def change_password():
     """Смена пароля"""
-    from app.forms import ChangePasswordForm
+    from ..forms import ChangePasswordForm
     form = ChangePasswordForm()
     
     if form.validate_on_submit():

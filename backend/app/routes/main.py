@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from sqlalchemy import or_
-from app import db
-from app.models import User, Article, Service, Application, News, Program
-from app.forms import ServiceApplicationForm, NewsletterForm
+from .. import db
+from ..models import User, Article, Service, Application, News, Program
+from ..forms import ServiceApplicationForm, NewsletterForm
 
 # Создание blueprint для основных страниц
 main = Blueprint('main', __name__)

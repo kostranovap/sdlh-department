@@ -16,7 +16,7 @@ python export_mysql_data.py
 ### 2. Проверка структуры проекта
 
 Убедитесь, что у вас есть следующие файлы в корне:
-- ✅ `app.py` - точка входа для Render
+- ✅ `wsgi.py` - точка входа для Render
 - ✅ `requirements.txt` - зависимости Python
 - ✅ `create_initial_data.py` - создание начальных данных
 - ✅ `.gitignore` - исключения для Git
@@ -76,7 +76,7 @@ git push -u origin main
 | **Branch** | `main` |
 | **Root Directory** | оставьте пустым |
 | **Build Command** | `pip install -r requirements.txt` |
-| **Start Command** | `gunicorn app:app` |
+| **Start Command** | `gunicorn wsgi:app` |
 
 ### Шаг 5: Настройка переменных окружения
 

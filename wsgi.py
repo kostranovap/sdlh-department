@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'backend'))
 
 from backend.app import create_app
 
-# Создание экземпляра приложения
+# Создание экземпляра приложения для Render
 app = create_app()
 
 if __name__ == '__main__':
