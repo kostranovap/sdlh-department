@@ -381,10 +381,11 @@ def auto_load_data():
                 with open(filepath, 'r', encoding='utf-8') as f:
                     return json.load(f)
             
-            # Загружаем пользователей
+            # Загружаем пользователей с сохранением оригинальных ID
             users_data = load_json_file('users.json')
             for user_data in users_data:
                 user = User(
+                    id=user_data['id'],  # Сохраняем оригинальный ID
                     username=user_data['username'],
                     email=user_data['email'],
                     full_name=user_data.get('full_name', ''),
@@ -396,10 +397,11 @@ def auto_load_data():
                 db.session.add(user)
             loaded_counts['users'] = len(users_data)
             
-            # Загружаем услуги
+            # Загружаем услуги с сохранением оригинальных ID
             services_data = load_json_file('services.json')
             for service_data in services_data:
                 service = Service(
+                    id=service_data['id'],  # Сохраняем оригинальный ID
                     name=service_data['name'],
                     description=service_data.get('description', ''),
                     requirements=service_data.get('requirements', ''),
@@ -414,10 +416,11 @@ def auto_load_data():
                 db.session.add(service)
             loaded_counts['services'] = len(services_data)
             
-            # Загружаем программы
+            # Загружаем программы с сохранением оригинальных ID
             programs_data = load_json_file('programs.json')
             for program_data in programs_data:
                 program = Program(
+                    id=program_data['id'],  # Сохраняем оригинальный ID
                     name=program_data['name'],
                     description=program_data.get('description', ''),
                     objectives=program_data.get('objectives', ''),
@@ -436,10 +439,11 @@ def auto_load_data():
             # Коммитим базовые данные ПЕРЕД заявлениями
             db.session.commit()
             
-            # Загружаем новости
+            # Загружаем новости с сохранением оригинальных ID
             news_data = load_json_file('news.json')
             for news_item in news_data:
                 news = News(
+                    id=news_item['id'],  # Сохраняем оригинальный ID
                     title=news_item['title'],
                     content=news_item.get('content', ''),
                     summary=news_item.get('summary', ''),
@@ -454,27 +458,30 @@ def auto_load_data():
                 db.session.add(news)
             loaded_counts['news'] = len(news_data)
             
-            # Загружаем статьи
+            # Загружаем статьи с сохранением оригинальных ID
             articles_data = load_json_file('articles.json')
             for article_data in articles_data:
-                article = Article(
-                    title=article_data['title'],
-                    content=article_data.get('content', ''),
-                    summary=article_data.get('summary', ''),
-                    page=article_data.get('page', ''),
-                    category=article_data.get('category', ''),
-                    is_published=article_data.get('is_published', True),
-                    author_id=article_data.get('author_id', 1),
-                    created_at=datetime.fromisoformat(article_data['created_at'].replace('Z', '+00:00')) if article_data.get('created_at') else datetime.utcnow(),
-                    updated_at=datetime.fromisoformat(article_data['updated_at'].replace('Z', '+00:00')) if article_data.get('updated_at') else datetime.utcnow()
-                )
-                db.session.add(article)
-            loaded_counts['articles'] = len(articles_data)
+                if article_data:  # Проверяем что данные не пустые
+                    article = Article(
+                        id=article_data['id'],  # Сохраняем оригинальный ID
+                        title=article_data['title'],
+                        content=article_data.get('content', ''),
+                        summary=article_data.get('summary', ''),
+                        page=article_data.get('page', ''),
+                        category=article_data.get('category', ''),
+                        is_published=article_data.get('is_published', True),
+                        author_id=article_data.get('author_id', 1),
+                        created_at=datetime.fromisoformat(article_data['created_at'].replace('Z', '+00:00')) if article_data.get('created_at') else datetime.utcnow(),
+                        updated_at=datetime.fromisoformat(article_data['updated_at'].replace('Z', '+00:00')) if article_data.get('updated_at') else datetime.utcnow()
+                    )
+                    db.session.add(article)
+            loaded_counts['articles'] = len([a for a in articles_data if a])
             
-            # Загружаем заявления
+            # Загружаем заявления с сохранением оригинальных ID
             applications_data = load_json_file('applications.json')
             for app_data in applications_data:
                 application = Application(
+                    id=app_data['id'],  # Сохраняем оригинальный ID
                     full_name=app_data['full_name'],
                     email=app_data.get('email', ''),
                     phone=app_data.get('phone', ''),
