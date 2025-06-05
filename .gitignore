@@ -40,9 +40,11 @@ instance/
 ehthumbs.db
 Thumbs.db
 
-# Upload folders
-frontend/static/images/uploads/
-frontend/static/uploads/
+# Upload folders (but keep structure)
+frontend/static/images/uploads/*
+!frontend/static/images/uploads/.gitkeep
+frontend/static/uploads/*
+!frontend/static/uploads/**/.gitkeep
 
 # Log files
 *.log

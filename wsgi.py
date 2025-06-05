@@ -347,6 +347,165 @@ def load_mysql_data():
     except Exception as e:
         return jsonify({'error': f'Ошибка загрузки данных: {str(e)}'}), 500
 
+@app.route('/auto-load-data-from-json-secret-route')
+def auto_load_data():
+    """Автоматическая загрузка данных из JSON файлов в репозитории"""
+    try:
+        import json
+        import os
+        
+        with app.app_context():
+            # Путь к папке с экспортированными данными
+            export_folder = os.path.join(os.path.dirname(__file__), 'mysql_export')
+            
+            if not os.path.exists(export_folder):
+                return f"❌ Папка mysql_export не найдена по пути: {export_folder}"
+            
+            # Очищаем существующие данные
+            db.session.query(Application).delete()
+            db.session.query(News).delete()
+            db.session.query(Article).delete()
+            db.session.query(Program).delete()
+            db.session.query(Service).delete()
+            db.session.query(User).delete()
+            db.session.commit()
+            
+            loaded_counts = {}
+            
+            def load_json_file(filename):
+                """Загружает данные из JSON файла"""
+                filepath = os.path.join(export_folder, filename)
+                if not os.path.exists(filepath):
+                    return []
+                
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            
+            # Загружаем пользователей
+            users_data = load_json_file('users.json')
+            for user_data in users_data:
+                user = User(
+                    username=user_data['username'],
+                    email=user_data['email'],
+                    full_name=user_data.get('full_name', ''),
+                    role=user_data.get('role', 'user'),
+                    is_active=user_data.get('is_active', True),
+                    created_at=datetime.fromisoformat(user_data['created_at'].replace('Z', '+00:00')) if user_data.get('created_at') else datetime.utcnow()
+                )
+                user.password_hash = user_data.get('password_hash', '')
+                db.session.add(user)
+            loaded_counts['users'] = len(users_data)
+            
+            # Загружаем услуги
+            services_data = load_json_file('services.json')
+            for service_data in services_data:
+                service = Service(
+                    name=service_data['name'],
+                    description=service_data.get('description', ''),
+                    requirements=service_data.get('requirements', ''),
+                    documents_needed=service_data.get('documents_needed', ''),
+                    processing_time=service_data.get('processing_time', ''),
+                    cost=service_data.get('cost', ''),
+                    responsible_department=service_data.get('responsible_department', ''),
+                    contact_info=service_data.get('contact_info', ''),
+                    is_active=service_data.get('is_active', True),
+                    created_at=datetime.fromisoformat(service_data['created_at'].replace('Z', '+00:00')) if service_data.get('created_at') else datetime.utcnow()
+                )
+                db.session.add(service)
+            loaded_counts['services'] = len(services_data)
+            
+            # Загружаем программы
+            programs_data = load_json_file('programs.json')
+            for program_data in programs_data:
+                program = Program(
+                    name=program_data['name'],
+                    description=program_data.get('description', ''),
+                    objectives=program_data.get('objectives', ''),
+                    requirements=program_data.get('requirements', ''),
+                    benefits=program_data.get('benefits', ''),
+                    duration=program_data.get('duration', ''),
+                    funding=program_data.get('funding', ''),
+                    responsible_department=program_data.get('responsible_department', ''),
+                    contact_info=program_data.get('contact_info', ''),
+                    is_active=program_data.get('is_active', True),
+                    created_at=datetime.fromisoformat(program_data['created_at'].replace('Z', '+00:00')) if program_data.get('created_at') else datetime.utcnow()
+                )
+                db.session.add(program)
+            loaded_counts['programs'] = len(programs_data)
+            
+            # Коммитим базовые данные ПЕРЕД заявлениями
+            db.session.commit()
+            
+            # Загружаем новости
+            news_data = load_json_file('news.json')
+            for news_item in news_data:
+                news = News(
+                    title=news_item['title'],
+                    content=news_item.get('content', ''),
+                    summary=news_item.get('summary', ''),
+                    image_url=news_item.get('image_url', ''),
+                    is_published=news_item.get('is_published', True),
+                    is_important=news_item.get('is_important', False),
+                    view_count=news_item.get('view_count', 0),
+                    author_id=news_item.get('author_id', 1),
+                    created_at=datetime.fromisoformat(news_item['created_at'].replace('Z', '+00:00')) if news_item.get('created_at') else datetime.utcnow(),
+                    updated_at=datetime.fromisoformat(news_item['updated_at'].replace('Z', '+00:00')) if news_item.get('updated_at') else datetime.utcnow()
+                )
+                db.session.add(news)
+            loaded_counts['news'] = len(news_data)
+            
+            # Загружаем статьи
+            articles_data = load_json_file('articles.json')
+            for article_data in articles_data:
+                article = Article(
+                    title=article_data['title'],
+                    content=article_data.get('content', ''),
+                    summary=article_data.get('summary', ''),
+                    page=article_data.get('page', ''),
+                    category=article_data.get('category', ''),
+                    is_published=article_data.get('is_published', True),
+                    author_id=article_data.get('author_id', 1),
+                    created_at=datetime.fromisoformat(article_data['created_at'].replace('Z', '+00:00')) if article_data.get('created_at') else datetime.utcnow(),
+                    updated_at=datetime.fromisoformat(article_data['updated_at'].replace('Z', '+00:00')) if article_data.get('updated_at') else datetime.utcnow()
+                )
+                db.session.add(article)
+            loaded_counts['articles'] = len(articles_data)
+            
+            # Загружаем заявления
+            applications_data = load_json_file('applications.json')
+            for app_data in applications_data:
+                application = Application(
+                    full_name=app_data['full_name'],
+                    email=app_data.get('email', ''),
+                    phone=app_data.get('phone', ''),
+                    service_id=app_data.get('service_id'),
+                    program_id=app_data.get('program_id'),
+                    description=app_data.get('message', ''),
+                    application_type=app_data.get('application_type', 'service'),
+                    status=app_data.get('status', 'new'),
+                    created_at=datetime.fromisoformat(app_data['created_at'].replace('Z', '+00:00')) if app_data.get('created_at') else datetime.utcnow()
+                )
+                db.session.add(application)
+            loaded_counts['applications'] = len(applications_data)
+            
+            db.session.commit()
+            
+            # Форматируем красивый ответ
+            result = "✅ Данные успешно загружены из JSON файлов!<br><br>📊 <strong>Статистика:</strong><br>"
+            for table, count in loaded_counts.items():
+                result += f"• {table}: {count} записей<br>"
+            
+            result += "<br>🎯 <strong>Что дальше:</strong><br>"
+            result += "• Войдите в админку: <a href='/admin'>Админка</a><br>"
+            result += "• Логин: admin, пароль: admin123<br>"
+            result += "• Добавьте изображения к новостям через админку<br>"
+            result += "<br>🏠 <a href='/'>На главную страницу</a>"
+            
+            return result
+        
+    except Exception as e:
+        return f"❌ Ошибка загрузки данных: {str(e)}"
+
 if __name__ == '__main__':
     # Для локальной разработки
     app.run(host='127.0.0.1', port=5000, debug=True) 
