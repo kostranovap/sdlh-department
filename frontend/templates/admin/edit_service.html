@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать услугу - Админ-панель{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Админ-панель</a></li>
+<li class="breadcrumb-item"><a href="{{ url_for('admin.services_programs') }}">Услуги и программы</a></li>
+<li class="breadcrumb-item">Редактировать услугу</li>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="admin-page">
+        <div class="page-header">
+            <h1>Редактировать услугу</h1>
+            <a href="{{ url_for('admin.services_programs') }}" class="btn-back">← Назад к списку</a>
+        </div>
+
+        <div class="admin-content">
+            <div class="form-container">
+                <form method="POST" class="admin-form service-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Название услуги *</label>
+                            <input type="text" id="name" name="name" required 
+                                   value="{{ service.name }}"
+                                   placeholder="Например: Разрешение на рубку деревьев">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="description">Описание *</label>
+                            <textarea id="description" name="description" rows="5" required
+                                      placeholder="Подробное описание услуги...">{{ service.description }}</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row two-cols">
+                        <div class="form-group">
+                            <label for="processing_time">Срок обработки</label>
+                            <input type="text" id="processing_time" name="processing_time"
+                                   value="{{ service.processing_time or '' }}"
+                                   placeholder="Например: 10 рабочих дней">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cost">Стоимость</label>
+                            <input type="text" id="cost" name="cost"
+                                   value="{{ service.cost or '' }}"
+                                   placeholder="Например: Бесплатно или 1000 руб.">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="requirements">Требования</label>
+                            <textarea id="requirements" name="requirements" rows="4"
+                                      placeholder="Требования для получения услуги...">{{ service.requirements or '' }}</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="documents_needed">Необходимые документы</label>
+                            <textarea id="documents_needed" name="documents_needed" rows="4"
+                                      placeholder="Список необходимых документов...">{{ service.documents_needed or '' }}</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row two-cols">
+                        <div class="form-group">
+                            <label for="responsible_department">Ответственный отдел</label>
+                            <input type="text" id="responsible_department" name="responsible_department"
+                                   value="{{ service.responsible_department or '' }}"
+                                   placeholder="Название отдела">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contact_info">Контактная информация</label>
+                            <textarea id="contact_info" name="contact_info" rows="3"
+                                      placeholder="Телефон, email, адрес...">{{ service.contact_info or '' }}</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="is_active" name="is_active" 
+                                       {% if service.is_active %}checked{% endif %}>
+                                <label for="is_active">Услуга активна</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">Сохранить изменения</button>
+                        <a href="{{ url_for('admin.services_programs') }}" class="btn btn-outline btn-large">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.service-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: var(--color-white);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-row {
+    margin-bottom: 1.5rem;
+}
+
+.form-row.two-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: var(--color-gray-700);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid var(--color-gray-200);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background: var(--color-white);
+    color: var(--color-gray-800);
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: var(--color-white);
+}
+
+.form-group textarea {
+    resize: vertical;
+    font-family: inherit;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.checkbox-group label {
+    margin: 0;
+    font-weight: 500;
+}
+
+.form-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-large {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    min-width: 140px;
+}
+
+@media (max-width: 768px) {
+    .form-row.two-cols {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .service-form {
+        padding: 1.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %} 

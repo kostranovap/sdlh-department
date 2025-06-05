@@ -1,0 +1,1863 @@
+/*
+* Стили для слабовидящих согласно ГОСТ Р 52872-2012 и WCAG 2.1 AA
+* Высокий контраст, крупные шрифты, четкие границы
+* Контрастность: минимум 4.5:1 для обычного текста, 3:1 для крупного
+*/
+
+/* ===== БАЗОВЫЕ НАСТРОЙКИ ===== */
+body.accessibility-mode {
+    font-family: Arial, Verdana, sans-serif !important;
+    font-size: 18px !important;
+    line-height: 1.8 !important;
+    color: #000000 !important;
+    background-color: #FFFF00 !important;
+    font-weight: normal !important;
+}
+
+/* ===== АЛЬТЕРНАТИВНЫЕ ЦВЕТОВЫЕ СХЕМЫ ===== */
+
+/* Белый фон + черный текст */
+body.accessibility-mode.color-white-black {
+    color: #000000 !important;
+    background-color: #FFFFFF !important;
+}
+
+/* Черный фон + белый текст */
+body.accessibility-mode.color-black-white {
+    color: #FFFFFF !important;
+    background-color: #000000 !important;
+}
+
+/* ===== ПОЛНЫЕ ЦВЕТОВЫЕ СХЕМЫ ===== */
+
+/* ===== БЕЛЫЙ ФОН + ЧЕРНЫЙ ТЕКСТ ===== */
+body.accessibility-mode.color-white-black {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+}
+
+/* Переопределяем все возможные элементы */
+body.accessibility-mode.color-white-black *,
+body.accessibility-mode.color-white-black div,
+body.accessibility-mode.color-white-black section,
+body.accessibility-mode.color-white-black article,
+body.accessibility-mode.color-white-black aside,
+body.accessibility-mode.color-white-black nav,
+body.accessibility-mode.color-white-black header,
+body.accessibility-mode.color-white-black footer,
+body.accessibility-mode.color-white-black main,
+body.accessibility-mode.color-white-black h1,
+body.accessibility-mode.color-white-black h2,
+body.accessibility-mode.color-white-black h3,
+body.accessibility-mode.color-white-black h4,
+body.accessibility-mode.color-white-black h5,
+body.accessibility-mode.color-white-black h6,
+body.accessibility-mode.color-white-black p,
+body.accessibility-mode.color-white-black span,
+body.accessibility-mode.color-white-black a,
+body.accessibility-mode.color-white-black li,
+body.accessibility-mode.color-white-black ul,
+body.accessibility-mode.color-white-black ol,
+body.accessibility-mode.color-white-black table,
+body.accessibility-mode.color-white-black tr,
+body.accessibility-mode.color-white-black td,
+body.accessibility-mode.color-white-black th {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+/* Панель доступности */
+body.accessibility-mode.color-white-black .accessibility-panel {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border-bottom: 3px solid #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .btn-accessibility,
+body.accessibility-mode.color-white-black .font-control,
+body.accessibility-mode.color-white-black .color-control,
+body.accessibility-mode.color-white-black .option-control {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .btn-accessibility:hover,
+body.accessibility-mode.color-white-black .font-control:hover,
+body.accessibility-mode.color-white-black .color-control:hover,
+body.accessibility-mode.color-white-black .option-control:hover,
+body.accessibility-mode.color-white-black .btn-accessibility:focus,
+body.accessibility-mode.color-white-black .font-control:focus,
+body.accessibility-mode.color-white-black .color-control:focus,
+body.accessibility-mode.color-white-black .option-control:focus {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    outline: 3px solid #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .font-control.active,
+body.accessibility-mode.color-white-black .color-control.active,
+body.accessibility-mode.color-white-black .option-control.active {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+}
+
+/* Шапка и навигация */
+body.accessibility-mode.color-white-black .header,
+body.accessibility-mode.color-white-black .header-top,
+body.accessibility-mode.color-white-black .header-main,
+body.accessibility-mode.color-white-black .header-nav {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .logo-title,
+body.accessibility-mode.color-white-black .logo-subtitle,
+body.accessibility-mode.color-white-black .settings-label {
+    color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .nav-link,
+body.accessibility-mode.color-white-black .btn-auth {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .nav-link:hover,
+body.accessibility-mode.color-white-black .btn-auth:hover,
+body.accessibility-mode.color-white-black .nav-link:focus,
+body.accessibility-mode.color-white-black .btn-auth:focus {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+}
+
+/* Поиск */
+body.accessibility-mode.color-white-black .search-container {
+    background: #FFFFFF !important;
+    border: 2px solid #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .search-input {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .search-input::placeholder {
+    color: #000000 !important;
+    opacity: 0.7 !important;
+}
+
+body.accessibility-mode.color-white-black .search-btn {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-white-black .search-btn:hover,
+body.accessibility-mode.color-white-black .search-btn:focus {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+}
+
+/* Контент */
+body.accessibility-mode.color-white-black .card {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .btn,
+body.accessibility-mode.color-white-black .btn-primary {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .btn:hover,
+body.accessibility-mode.color-white-black .btn-primary:hover,
+body.accessibility-mode.color-white-black .btn:focus,
+body.accessibility-mode.color-white-black .btn-primary:focus {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+}
+
+/* Формы */
+body.accessibility-mode.color-white-black .form-control {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .form-control:focus {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+    outline: 3px solid #000000 !important;
+}
+
+/* Футер */
+body.accessibility-mode.color-white-black .footer {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .footer-links a {
+    color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .footer-links a:hover,
+body.accessibility-mode.color-white-black .footer-links a:focus {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+}
+
+/* ===== ЧЕРНЫЙ ФОН + БЕЛЫЙ ТЕКСТ ===== */
+body.accessibility-mode.color-black-white {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+}
+
+/* Переопределяем все возможные элементы */
+body.accessibility-mode.color-black-white *,
+body.accessibility-mode.color-black-white div,
+body.accessibility-mode.color-black-white section,
+body.accessibility-mode.color-black-white article,
+body.accessibility-mode.color-black-white aside,
+body.accessibility-mode.color-black-white nav,
+body.accessibility-mode.color-black-white header,
+body.accessibility-mode.color-black-white footer,
+body.accessibility-mode.color-black-white main,
+body.accessibility-mode.color-black-white h1,
+body.accessibility-mode.color-black-white h2,
+body.accessibility-mode.color-black-white h3,
+body.accessibility-mode.color-black-white h4,
+body.accessibility-mode.color-black-white h5,
+body.accessibility-mode.color-black-white h6,
+body.accessibility-mode.color-black-white p,
+body.accessibility-mode.color-black-white span,
+body.accessibility-mode.color-black-white a,
+body.accessibility-mode.color-black-white li,
+body.accessibility-mode.color-black-white ul,
+body.accessibility-mode.color-black-white ol,
+body.accessibility-mode.color-black-white table,
+body.accessibility-mode.color-black-white tr,
+body.accessibility-mode.color-black-white td,
+body.accessibility-mode.color-black-white th {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+    border-color: #FFFFFF !important;
+}
+
+/* Панель доступности */
+body.accessibility-mode.color-black-white .accessibility-panel {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border-bottom: 3px solid #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .btn-accessibility,
+body.accessibility-mode.color-black-white .font-control,
+body.accessibility-mode.color-black-white .color-control,
+body.accessibility-mode.color-black-white .option-control {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .btn-accessibility:hover,
+body.accessibility-mode.color-black-white .font-control:hover,
+body.accessibility-mode.color-black-white .color-control:hover,
+body.accessibility-mode.color-black-white .option-control:hover,
+body.accessibility-mode.color-black-white .btn-accessibility:focus,
+body.accessibility-mode.color-black-white .font-control:focus,
+body.accessibility-mode.color-black-white .color-control:focus,
+body.accessibility-mode.color-black-white .option-control:focus {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    outline: 3px solid #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .font-control.active,
+body.accessibility-mode.color-black-white .color-control.active,
+body.accessibility-mode.color-black-white .option-control.active {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+}
+
+/* Шапка и навигация */
+body.accessibility-mode.color-black-white .header,
+body.accessibility-mode.color-black-white .header-top,
+body.accessibility-mode.color-black-white .header-main,
+body.accessibility-mode.color-black-white .header-nav {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border-color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .logo-title,
+body.accessibility-mode.color-black-white .logo-subtitle,
+body.accessibility-mode.color-black-white .settings-label {
+    color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .nav-link,
+body.accessibility-mode.color-black-white .btn-auth {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .nav-link:hover,
+body.accessibility-mode.color-black-white .btn-auth:hover,
+body.accessibility-mode.color-black-white .nav-link:focus,
+body.accessibility-mode.color-black-white .btn-auth:focus {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+}
+
+/* Поиск */
+body.accessibility-mode.color-black-white .search-container {
+    background: #000000 !important;
+    border: 2px solid #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .search-input {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .search-input::placeholder {
+    color: #FFFFFF !important;
+    opacity: 0.7 !important;
+}
+
+body.accessibility-mode.color-black-white .search-btn {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+}
+
+body.accessibility-mode.color-black-white .search-btn:hover,
+body.accessibility-mode.color-black-white .search-btn:focus {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #FFFFFF !important;
+}
+
+/* Контент */
+body.accessibility-mode.color-black-white .card {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .btn,
+body.accessibility-mode.color-black-white .btn-primary {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .btn:hover,
+body.accessibility-mode.color-black-white .btn-primary:hover,
+body.accessibility-mode.color-black-white .btn:focus,
+body.accessibility-mode.color-black-white .btn-primary:focus {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+}
+
+/* Формы */
+body.accessibility-mode.color-black-white .form-control {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .form-control:focus {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border-color: #FFFFFF !important;
+    outline: 3px solid #FFFFFF !important;
+}
+
+/* Футер */
+body.accessibility-mode.color-black-white .footer {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border-color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .footer-links a {
+    color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .footer-links a:hover,
+body.accessibility-mode.color-black-white .footer-links a:focus {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+}
+
+/* ===== ПЕРЕОПРЕДЕЛЕНИЕ ЗЕЛЕНЫХ ЦВЕТОВ ===== */
+
+/* Убираем зеленый цвет во ВСЕХ схемах доступности */
+body.accessibility-mode .btn-accessibility-toggle,
+body.accessibility-mode .footer,
+body.accessibility-mode .footer-main,
+body.accessibility-mode .footer-bottom,
+body.accessibility-mode .header-nav,
+body.accessibility-mode .nav-link,
+body.accessibility-mode .nav-link:hover,
+body.accessibility-mode .nav-link.active,
+body.accessibility-mode .btn-primary,
+body.accessibility-mode .text-primary,
+body.accessibility-mode .bg-primary,
+body.accessibility-mode .text-success,
+body.accessibility-mode .badge-success,
+body.accessibility-mode .badge-primary,
+body.accessibility-mode .emergency-footer,
+body.accessibility-mode .accessibility-panel {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border-color: #FFFF00 !important;
+}
+
+/* Белая схема - переопределяем зеленые элементы */
+body.accessibility-mode.color-white-black .btn-accessibility-toggle,
+body.accessibility-mode.color-white-black .footer,
+body.accessibility-mode.color-white-black .footer-main,
+body.accessibility-mode.color-white-black .footer-bottom,
+body.accessibility-mode.color-white-black .header-nav,
+body.accessibility-mode.color-white-black .nav-link,
+body.accessibility-mode.color-white-black .nav-link:hover,
+body.accessibility-mode.color-white-black .nav-link.active,
+body.accessibility-mode.color-white-black .btn-primary,
+body.accessibility-mode.color-white-black .text-primary,
+body.accessibility-mode.color-white-black .bg-primary,
+body.accessibility-mode.color-white-black .text-success,
+body.accessibility-mode.color-white-black .badge-success,
+body.accessibility-mode.color-white-black .badge-primary,
+body.accessibility-mode.color-white-black .emergency-footer,
+body.accessibility-mode.color-white-black .accessibility-panel {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+/* Черная схема - переопределяем зеленые элементы */
+body.accessibility-mode.color-black-white .btn-accessibility-toggle,
+body.accessibility-mode.color-black-white .footer,
+body.accessibility-mode.color-black-white .footer-main,
+body.accessibility-mode.color-black-white .footer-bottom,
+body.accessibility-mode.color-black-white .header-nav,
+body.accessibility-mode.color-black-white .nav-link,
+body.accessibility-mode.color-black-white .nav-link:hover,
+body.accessibility-mode.color-black-white .nav-link.active,
+body.accessibility-mode.color-black-white .btn-primary,
+body.accessibility-mode.color-black-white .text-primary,
+body.accessibility-mode.color-black-white .bg-primary,
+body.accessibility-mode.color-black-white .text-success,
+body.accessibility-mode.color-black-white .badge-success,
+body.accessibility-mode.color-black-white .badge-primary,
+body.accessibility-mode.color-black-white .emergency-footer,
+body.accessibility-mode.color-black-white .accessibility-panel {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border-color: #FFFFFF !important;
+}
+
+/* ===== ДОПОЛНИТЕЛЬНЫЕ ОПЦИИ ===== */
+
+/* Отключение изображений */
+body.accessibility-mode.hide-images img {
+    display: none !important;
+}
+
+body.accessibility-mode.hide-images::after {
+    content: "🖼️ [изображение]" !important;
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    padding: 4px 8px !important;
+    border-radius: 3px !important;
+    font-size: 12px !important;
+}
+
+
+
+/* Увеличенный межстрочный интервал */
+body.accessibility-mode.increased-line-height {
+    line-height: 2.2 !important;
+}
+
+body.accessibility-mode.increased-line-height * {
+    line-height: 2.2 !important;
+}
+
+/* Контрольные классы для отображения текста */
+body.accessibility-mode .accessibility-text {
+    display: inline !important;
+}
+
+body.accessibility-mode .normal-text {
+    display: none !important;
+}
+
+/* ===== РАЗМЕРЫ ШРИФТОВ ===== */
+body.accessibility-mode.font-normal {
+    font-size: 18px !important;
+}
+
+body.accessibility-mode.font-large {
+    font-size: 20px !important;
+}
+
+body.accessibility-mode.font-extra-large {
+    font-size: 24px !important;
+}
+
+/* ===== ПАНЕЛЬ ДОСТУПНОСТИ ===== */
+body.accessibility-mode .accessibility-panel {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border-bottom: 3px solid #FFFF00 !important;
+    padding: 15px 0 !important;
+}
+
+body.accessibility-mode .accessibility-controls {
+    display: flex !important;
+    align-items: center !important;
+    gap: 20px !important;
+    flex-wrap: wrap !important;
+}
+
+body.accessibility-mode .btn-accessibility {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border: 2px solid #FFFF00 !important;
+    padding: 12px 20px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+body.accessibility-mode .btn-accessibility:hover,
+body.accessibility-mode .btn-accessibility:focus {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    outline: 3px solid #000000 !important;
+    outline-offset: 2px !important;
+}
+
+body.accessibility-mode .settings-label {
+    color: #FFFF00 !important;
+    font-weight: bold !important;
+    font-size: 16px !important;
+    margin-right: 10px !important;
+}
+
+body.accessibility-mode .font-control {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border: 2px solid #FFFF00 !important;
+    padding: 8px 12px !important;
+    margin: 0 3px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    border-radius: 3px !important;
+    cursor: pointer !important;
+    min-width: 40px !important;
+    transition: all 0.2s ease !important;
+}
+
+body.accessibility-mode .font-control:hover,
+body.accessibility-mode .font-control:focus {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    outline: 3px solid #000000 !important;
+    outline-offset: 2px !important;
+}
+
+body.accessibility-mode .font-control.active {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+body.accessibility-mode .btn-close {
+    background: #CC0000 !important;
+    color: #FFFF00 !important;
+    border: 2px solid #FFFF00 !important;
+    padding: 8px 12px !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    border-radius: 3px !important;
+    cursor: pointer !important;
+    margin-left: auto !important;
+}
+
+body.accessibility-mode .btn-close:hover,
+body.accessibility-mode .btn-close:focus {
+    background: #FFFF00 !important;
+    color: #CC0000 !important;
+    outline: 3px solid #000000 !important;
+}
+
+/* ===== ШАПКА САЙТА ===== */
+body.accessibility-mode .header {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border-bottom: 3px solid #FFFF00 !important;
+}
+
+body.accessibility-mode .header-top {
+    background: #000000 !important;
+    border-bottom: 2px solid #FFFF00 !important;
+}
+
+body.accessibility-mode .btn-accessibility-toggle {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border: 2px solid #FFFF00 !important;
+    padding: 10px 16px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+}
+
+body.accessibility-mode .btn-accessibility-toggle:hover,
+body.accessibility-mode .btn-accessibility-toggle:focus {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    outline: 3px solid #000000 !important;
+}
+
+body.accessibility-mode .header-main {
+    background: #000000 !important;
+}
+
+body.accessibility-mode .logo-title {
+    color: #FFFF00 !important;
+    font-size: 1.8rem !important;
+    font-weight: bold !important;
+}
+
+body.accessibility-mode.font-large .logo-title {
+    font-size: 2.0rem !important;
+}
+
+body.accessibility-mode.font-extra-large .logo-title {
+    font-size: 2.4rem !important;
+}
+
+body.accessibility-mode .logo-subtitle {
+    color: #FFFF00 !important;
+    font-size: 1.1rem !important;
+    font-weight: normal !important;
+}
+
+/* ===== ПОИСК ===== */
+body.accessibility-mode .search-container {
+    background: #FFFF00 !important;
+    border: 2px solid #000000 !important;
+}
+
+body.accessibility-mode .search-input {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    border: none !important;
+}
+
+body.accessibility-mode .search-input::placeholder {
+    color: #000000 !important;
+    opacity: 0.8 !important;
+}
+
+body.accessibility-mode .search-input:focus {
+    outline: 3px solid #000000 !important;
+    outline-offset: 2px !important;
+}
+
+body.accessibility-mode .search-btn {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border: 2px solid #FFFF00 !important;
+    font-size: 18px !important;
+}
+
+body.accessibility-mode .search-btn:hover,
+body.accessibility-mode .search-btn:focus {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    outline: 3px solid #000000 !important;
+}
+
+/* Результаты поиска */
+body.accessibility-mode .search-dropdown {
+    background: #FFFF00 !important;
+    border: 2px solid #000000 !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.accessibility-mode .search-result-item {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    border-bottom: 1px solid #000000 !important;
+    padding: 12px 16px !important;
+}
+
+body.accessibility-mode .search-result-item:hover {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+}
+
+body.accessibility-mode .search-result-title {
+    color: inherit !important;
+    font-weight: bold !important;
+}
+
+body.accessibility-mode .search-result-type {
+    color: inherit !important;
+    font-weight: normal !important;
+}
+
+/* ===== АВТОРИЗАЦИЯ ===== */
+body.accessibility-mode .btn-auth {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border: 2px solid #FFFF00 !important;
+    padding: 10px 16px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+}
+
+body.accessibility-mode .btn-auth:hover,
+body.accessibility-mode .btn-auth:focus {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    outline: 3px solid #000000 !important;
+}
+
+/* ===== НАВИГАЦИЯ ===== */
+body.accessibility-mode .header-nav {
+    background: #000000 !important;
+    border-top: 2px solid #FFFF00 !important;
+}
+
+body.accessibility-mode .nav-link {
+    color: #FFFF00 !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    padding: 20px 25px !important;
+    border: 2px solid transparent !important;
+}
+
+body.accessibility-mode .nav-link:hover,
+body.accessibility-mode .nav-link:focus {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+    outline: none !important;
+}
+
+body.accessibility-mode .nav-link.active {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    border-bottom: 3px solid #000000 !important;
+}
+
+/* ===== ХЛЕБНЫЕ КРОШКИ ===== */
+body.accessibility-mode .breadcrumbs {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border-bottom: 2px solid #FFFF00 !important;
+    padding: 15px 0 !important;
+}
+
+body.accessibility-mode .breadcrumb-item a {
+    color: #FFFF00 !important;
+    font-weight: bold !important;
+    text-decoration: underline !important;
+}
+
+body.accessibility-mode .breadcrumb-item a:hover,
+body.accessibility-mode .breadcrumb-item a:focus {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    padding: 4px 8px !important;
+    outline: 2px solid #000000 !important;
+}
+
+/* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+body.accessibility-mode .main-content {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+}
+
+body.accessibility-mode .page-content {
+    background: #FFFF00 !important;
+    padding: 30px 0 !important;
+}
+
+/* ===== ЗАГОЛОВКИ ===== */
+body.accessibility-mode h1,
+body.accessibility-mode h2,
+body.accessibility-mode h3,
+body.accessibility-mode h4,
+body.accessibility-mode h5,
+body.accessibility-mode h6 {
+    color: #000000 !important;
+    font-weight: bold !important;
+    margin-bottom: 20px !important;
+    line-height: 1.4 !important;
+}
+
+body.accessibility-mode h1 {
+    font-size: 2.2rem !important;
+    border-bottom: 3px solid #000000 !important;
+    padding-bottom: 10px !important;
+}
+
+body.accessibility-mode.font-large h1 {
+    font-size: 2.4rem !important;
+}
+
+body.accessibility-mode.font-extra-large h1 {
+    font-size: 2.8rem !important;
+}
+
+body.accessibility-mode h2 {
+    font-size: 1.8rem !important;
+    border-bottom: 2px solid #000000 !important;
+    padding-bottom: 8px !important;
+}
+
+body.accessibility-mode h3 {
+    font-size: 1.5rem !important;
+}
+
+body.accessibility-mode h4 {
+    font-size: 1.3rem !important;
+}
+
+/* ===== КАРТОЧКИ ===== */
+body.accessibility-mode .card {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    border: 3px solid #000000 !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+body.accessibility-mode .card:hover,
+body.accessibility-mode .card:focus-within {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border-color: #FFFF00 !important;
+}
+
+body.accessibility-mode .card-title {
+    color: inherit !important;
+    font-weight: bold !important;
+    font-size: 1.4rem !important;
+    margin-bottom: 15px !important;
+}
+
+body.accessibility-mode .card-text {
+    color: inherit !important;
+    line-height: 1.8 !important;
+    margin-bottom: 15px !important;
+}
+
+body.accessibility-mode .card-link {
+    color: inherit !important;
+    font-weight: bold !important;
+    text-decoration: underline !important;
+    border: 2px solid transparent !important;
+    padding: 8px 12px !important;
+    display: inline-block !important;
+    border-radius: 4px !important;
+}
+
+body.accessibility-mode .card:hover .card-link,
+body.accessibility-mode .card-link:focus {
+    border-color: currentColor !important;
+    outline: 2px solid currentColor !important;
+    outline-offset: 2px !important;
+}
+
+/* ===== КНОПКИ ===== */
+body.accessibility-mode .btn {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border: 2px solid #FFFF00 !important;
+    padding: 12px 20px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+}
+
+body.accessibility-mode .btn:hover,
+body.accessibility-mode .btn:focus {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    outline: 3px solid #000000 !important;
+    outline-offset: 2px !important;
+}
+
+body.accessibility-mode .btn-primary,
+body.accessibility-mode .btn-secondary {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border: 2px solid #FFFF00 !important;
+}
+
+/* ===== ФОРМЫ ===== */
+body.accessibility-mode .form-label {
+    color: #000000 !important;
+    font-weight: bold !important;
+    font-size: 18px !important;
+    margin-bottom: 8px !important;
+    display: block !important;
+}
+
+body.accessibility-mode .form-control {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+    padding: 12px 16px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    border-radius: 4px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+body.accessibility-mode .form-control:focus {
+    outline: 3px solid #000000 !important;
+    outline-offset: 2px !important;
+    background: #FFFFFF !important;
+    border-color: #000000 !important;
+}
+
+body.accessibility-mode .form-control::placeholder {
+    color: #000000 !important;
+    opacity: 0.8 !important;
+    font-weight: normal !important;
+}
+
+/* Обязательные поля */
+body.accessibility-mode .required::after {
+    content: " *" !important;
+    color: #CC0000 !important;
+    font-weight: bold !important;
+}
+
+/* ===== ТАБЛИЦЫ ===== */
+body.accessibility-mode table {
+    background: #FFFF00 !important;
+    border: 2px solid #000000 !important;
+    border-collapse: collapse !important;
+    width: 100% !important;
+}
+
+body.accessibility-mode th {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border: 2px solid #000000 !important;
+    padding: 12px 16px !important;
+    font-weight: bold !important;
+    text-align: left !important;
+}
+
+body.accessibility-mode td {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
+    padding: 12px 16px !important;
+}
+
+body.accessibility-mode tbody tr:hover {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+}
+
+body.accessibility-mode tbody tr:hover td {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+}
+
+/* ===== ССЫЛКИ ===== */
+body.accessibility-mode a {
+    color: #000000 !important;
+    font-weight: bold !important;
+    text-decoration: underline !important;
+}
+
+body.accessibility-mode a:hover,
+body.accessibility-mode a:focus {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    padding: 2px 4px !important;
+    outline: 2px solid #000000 !important;
+    outline-offset: 2px !important;
+}
+
+/* ===== СООБЩЕНИЯ ===== */
+body.accessibility-mode .flash-message {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border: 3px solid #FFFF00 !important;
+    padding: 16px 20px !important;
+    margin-bottom: 20px !important;
+    border-radius: 4px !important;
+    font-weight: bold !important;
+}
+
+body.accessibility-mode .close-flash {
+    background: #CC0000 !important;
+    color: #FFFF00 !important;
+    border: 2px solid #FFFF00 !important;
+    padding: 4px 8px !important;
+    border-radius: 3px !important;
+    font-weight: bold !important;
+}
+
+body.accessibility-mode .close-flash:hover,
+body.accessibility-mode .close-flash:focus {
+    background: #FFFF00 !important;
+    color: #CC0000 !important;
+}
+
+/* ===== ПОДВАЛ ===== */
+body.accessibility-mode .footer {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border-top: 3px solid #FFFF00 !important;
+}
+
+body.accessibility-mode .footer-title {
+    color: #FFFF00 !important;
+    font-weight: bold !important;
+    font-size: 1.2rem !important;
+    margin-bottom: 15px !important;
+}
+
+body.accessibility-mode .footer-links a {
+    color: #FFFF00 !important;
+    font-weight: bold !important;
+    text-decoration: underline !important;
+}
+
+body.accessibility-mode .footer-links a:hover,
+body.accessibility-mode .footer-links a:focus {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    padding: 4px 8px !important;
+    outline: 2px solid #FFFF00 !important;
+}
+
+/* ===== ФОКУС ДЛЯ ВСЕХ ЭЛЕМЕНТОВ ===== */
+body.accessibility-mode *:focus {
+    outline: 3px solid #000000 !important;
+    outline-offset: 2px !important;
+}
+
+/* ===== АДАПТИВНОСТЬ ===== */
+@media (max-width: 768px) {
+    body.accessibility-mode {
+        font-size: 16px !important;
+    }
+    
+    body.accessibility-mode.font-large {
+        font-size: 18px !important;
+    }
+    
+    body.accessibility-mode.font-extra-large {
+        font-size: 20px !important;
+    }
+    
+    body.accessibility-mode .nav-link {
+        font-size: 16px !important;
+        padding: 15px 20px !important;
+    }
+    
+    body.accessibility-mode h1 {
+        font-size: 1.8rem !important;
+    }
+    
+    body.accessibility-mode .accessibility-controls {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    body.accessibility-mode {
+        font-size: 14px !important;
+    }
+    
+    body.accessibility-mode.font-large {
+        font-size: 16px !important;
+    }
+    
+    body.accessibility-mode.font-extra-large {
+        font-size: 18px !important;
+    }
+    
+    body.accessibility-mode .logo-title {
+        font-size: 1.4rem !important;
+    }
+}
+
+/* ===== ПРИНУДИТЕЛЬНОЕ ПРИМЕНЕНИЕ СТИЛЕЙ ===== */
+body.accessibility-mode * {
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+body.accessibility-mode *:not(.sr-only) {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Контрастные маркеры списков */
+body.accessibility-mode li::marker {
+    color: #000000 !important;
+    font-weight: bold !important;
+}
+
+/* Специальные стили для элементов навигации с клавиатуры */
+body.accessibility-mode [tabindex]:focus,
+body.accessibility-mode [tabindex="0"]:focus {
+    outline: 3px solid #000000 !important;
+    outline-offset: 2px !important;
+    background: #000000 !important;
+    color: #FFFF00 !important;
+}
+
+/* ===== СПЕЦИАЛЬНЫЕ СТИЛИ ДЛЯ ФОРМЫ ПОДАЧИ ЗАЯВКИ ===== */
+
+/* Контейнер формы */
+body.accessibility-mode .services-form-container {
+    display: block !important;
+    grid-template-columns: none !important;
+    max-width: 800px !important;
+    margin: 0 auto !important;
+}
+
+body.accessibility-mode .combined-section {
+    height: auto !important;
+    max-height: none !important;
+    margin-bottom: 30px !important;
+}
+
+body.accessibility-mode .application-section {
+    height: auto !important;
+    max-height: none !important;
+    padding: 30px !important;
+    margin-top: 0 !important;
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border: 3px solid #FFFF00 !important;
+}
+
+/* Заголовок формы */
+body.accessibility-mode .form-title {
+    color: #FFFF00 !important;
+    font-size: 24px !important;
+    margin-bottom: 25px !important;
+    text-align: center !important;
+}
+
+/* Сетка формы */
+body.accessibility-mode .form-grid {
+    display: block !important;
+    grid-template-columns: none !important;
+    gap: 0 !important;
+}
+
+/* Группы полей */
+body.accessibility-mode .form-group {
+    margin-bottom: 20px !important;
+    width: 100% !important;
+}
+
+body.accessibility-mode .form-group.full-width {
+    grid-column: auto !important;
+}
+
+/* Лейблы в форме заявки */
+body.accessibility-mode .application-form .form-label {
+    color: #FFFF00 !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    margin-bottom: 10px !important;
+    display: block !important;
+}
+
+/* Поля ввода в форме заявки */
+body.accessibility-mode .application-form .form-input,
+body.accessibility-mode .application-form .form-select,
+body.accessibility-mode .application-form .form-textarea {
+    width: 100% !important;
+    padding: 15px !important;
+    font-size: 18px !important;
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    border: 3px solid #000000 !important;
+    border-radius: 8px !important;
+    margin-bottom: 10px !important;
+    box-sizing: border-box !important;
+}
+
+body.accessibility-mode .application-form .form-select {
+    height: auto !important;
+    min-height: 50px !important;
+}
+
+body.accessibility-mode .application-form .form-select option {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    padding: 10px !important;
+}
+
+body.accessibility-mode .application-form .form-textarea {
+    min-height: 120px !important;
+    max-height: 200px !important;
+    resize: vertical !important;
+}
+
+/* Фокус на полях */
+body.accessibility-mode .application-form .form-input:focus,
+body.accessibility-mode .application-form .form-select:focus,
+body.accessibility-mode .application-form .form-textarea:focus {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+    outline: 5px solid #000000 !important;
+    outline-offset: 3px !important;
+}
+
+/* Плейсхолдеры */
+body.accessibility-mode .application-form .form-input::placeholder,
+body.accessibility-mode .application-form .form-textarea::placeholder {
+    color: #000000 !important;
+    opacity: 0.7 !important;
+}
+
+/* Кнопка отправки */
+body.accessibility-mode .form-submit {
+    width: 100% !important;
+    padding: 20px !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border: 3px solid #FFFF00 !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    margin-top: 20px !important;
+    transition: all 0.2s ease !important;
+}
+
+body.accessibility-mode .form-submit:hover,
+body.accessibility-mode .form-submit:focus {
+    background: #FFFF00 !important;
+    color: #000000 !important;
+    outline: 5px solid #000000 !important;
+    outline-offset: 3px !important;
+    transform: none !important;
+}
+
+/* Стили для альтернативных цветовых схем - ФОРМА */
+
+/* Белая схема - форма */
+body.accessibility-mode.color-white-black .application-section {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .form-title,
+body.accessibility-mode.color-white-black .application-form .form-label {
+    color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .application-form .form-input,
+body.accessibility-mode.color-white-black .application-form .form-select,
+body.accessibility-mode.color-white-black .application-form .form-textarea {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .form-submit {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border-color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .form-submit:hover,
+body.accessibility-mode.color-white-black .form-submit:focus {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+/* Черная схема - форма */
+body.accessibility-mode.color-black-white .application-section {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border-color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .form-title,
+body.accessibility-mode.color-black-white .application-form .form-label {
+    color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .application-form .form-input,
+body.accessibility-mode.color-black-white .application-form .form-select,
+body.accessibility-mode.color-black-white .application-form .form-textarea {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border-color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .form-submit {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border-color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .form-submit:hover,
+body.accessibility-mode.color-black-white .form-submit:focus {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border-color: #FFFFFF !important;
+}
+
+/* ===== ПОЛНОЕ ПЕРЕОПРЕДЕЛЕНИЕ ВСЕХ ЗЕЛЕНЫХ ЭЛЕМЕНТОВ ===== */
+
+/* Основные переменные цветов */
+body.accessibility-mode :root {
+    --color-primary: #000000 !important;
+    --color-primary-dark: #000000 !important;
+    --color-primary-light: #000000 !important;
+    --color-primary-rgb: 0, 0, 0 !important;
+}
+
+/* Переопределяем все элементы с var(--color-primary) */
+body.accessibility-mode .page-header,
+body.accessibility-mode .hero-banner,
+body.accessibility-mode .section-header,
+body.accessibility-mode .combined-section,
+body.accessibility-mode .items-list-container,
+body.accessibility-mode .structure-item,
+body.accessibility-mode .contact-card,
+body.accessibility-mode .documents-card,
+body.accessibility-mode .timeline-content,
+body.accessibility-mode .leader-card,
+body.accessibility-mode .stat-card,
+body.accessibility-mode .news-card,
+body.accessibility-mode .application-section,
+body.accessibility-mode .emergency-footer {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border-color: #FFFF00 !important;
+}
+
+/* Заголовки и текст */
+body.accessibility-mode .section-title,
+body.accessibility-mode .page-title,
+body.accessibility-mode .detail-title,
+body.accessibility-mode h1, 
+body.accessibility-mode h2, 
+body.accessibility-mode h3, 
+body.accessibility-mode h4,
+body.accessibility-mode .leader-position,
+body.accessibility-mode .timeline-link,
+body.accessibility-mode .contact-link {
+    color: #FFFF00 !important;
+}
+
+/* Кнопки и ссылки */
+body.accessibility-mode .tab-button,
+body.accessibility-mode .btn-primary,
+body.accessibility-mode .btn-secondary,
+body.accessibility-mode .section-link,
+body.accessibility-mode .news-link {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border-color: #FFFF00 !important;
+}
+
+/* Границы и линии */
+body.accessibility-mode .timeline-year::before,
+body.accessibility-mode .progress-bar,
+body.accessibility-mode .danger-indicator,
+body.accessibility-mode .status-indicator {
+    background: #FFFF00 !important;
+    border-color: #000000 !important;
+}
+
+/* Особые элементы */
+body.accessibility-mode .fire-danger,
+body.accessibility-mode .emergency-banner,
+body.accessibility-mode .alert,
+body.accessibility-mode .notice {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border: 3px solid #FFFF00 !important;
+}
+
+/* Для альтернативных цветовых схем */
+
+/* Белая схема */
+body.accessibility-mode.color-white-black .page-header,
+body.accessibility-mode.color-white-black .hero-banner,
+body.accessibility-mode.color-white-black .section-header,
+body.accessibility-mode.color-white-black .combined-section,
+body.accessibility-mode.color-white-black .items-list-container,
+body.accessibility-mode.color-white-black .structure-item,
+body.accessibility-mode.color-white-black .contact-card,
+body.accessibility-mode.color-white-black .documents-card,
+body.accessibility-mode.color-white-black .timeline-content,
+body.accessibility-mode.color-white-black .leader-card,
+body.accessibility-mode.color-white-black .stat-card,
+body.accessibility-mode.color-white-black .news-card,
+body.accessibility-mode.color-white-black .emergency-footer {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .section-title,
+body.accessibility-mode.color-white-black .page-title,
+body.accessibility-mode.color-white-black .detail-title,
+body.accessibility-mode.color-white-black h1, 
+body.accessibility-mode.color-white-black h2, 
+body.accessibility-mode.color-white-black h3, 
+body.accessibility-mode.color-white-black h4,
+body.accessibility-mode.color-white-black .leader-position,
+body.accessibility-mode.color-white-black .timeline-link,
+body.accessibility-mode.color-white-black .contact-link {
+    color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .tab-button,
+body.accessibility-mode.color-white-black .btn-primary,
+body.accessibility-mode.color-white-black .btn-secondary,
+body.accessibility-mode.color-white-black .section-link,
+body.accessibility-mode.color-white-black .news-link {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border-color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .timeline-year::before,
+body.accessibility-mode.color-white-black .progress-bar,
+body.accessibility-mode.color-white-black .danger-indicator,
+body.accessibility-mode.color-white-black .status-indicator {
+    background: #000000 !important;
+    border-color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-white-black .fire-danger,
+body.accessibility-mode.color-white-black .emergency-banner,
+body.accessibility-mode.color-white-black .alert,
+body.accessibility-mode.color-white-black .notice {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 3px solid #000000 !important;
+}
+
+/* Черная схема */
+body.accessibility-mode.color-black-white .page-header,
+body.accessibility-mode.color-black-white .hero-banner,
+body.accessibility-mode.color-black-white .section-header,
+body.accessibility-mode.color-black-white .combined-section,
+body.accessibility-mode.color-black-white .items-list-container,
+body.accessibility-mode.color-black-white .structure-item,
+body.accessibility-mode.color-black-white .contact-card,
+body.accessibility-mode.color-black-white .documents-card,
+body.accessibility-mode.color-black-white .timeline-content,
+body.accessibility-mode.color-black-white .leader-card,
+body.accessibility-mode.color-black-white .stat-card,
+body.accessibility-mode.color-black-white .news-card,
+body.accessibility-mode.color-black-white .emergency-footer {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border-color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .section-title,
+body.accessibility-mode.color-black-white .page-title,
+body.accessibility-mode.color-black-white .detail-title,
+body.accessibility-mode.color-black-white h1, 
+body.accessibility-mode.color-black-white h2, 
+body.accessibility-mode.color-black-white h3, 
+body.accessibility-mode.color-black-white h4,
+body.accessibility-mode.color-black-white .leader-position,
+body.accessibility-mode.color-black-white .timeline-link,
+body.accessibility-mode.color-black-white .contact-link {
+    color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .tab-button,
+body.accessibility-mode.color-black-white .btn-primary,
+body.accessibility-mode.color-black-white .btn-secondary,
+body.accessibility-mode.color-black-white .section-link,
+body.accessibility-mode.color-black-white .news-link {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border-color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .timeline-year::before,
+body.accessibility-mode.color-black-white .progress-bar,
+body.accessibility-mode.color-black-white .danger-indicator,
+body.accessibility-mode.color-black-white .status-indicator {
+    background: #FFFFFF !important;
+    border-color: #000000 !important;
+}
+
+body.accessibility-mode.color-black-white .fire-danger,
+body.accessibility-mode.color-black-white .emergency-banner,
+body.accessibility-mode.color-black-white .alert,
+body.accessibility-mode.color-black-white .notice {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border: 3px solid #FFFFFF !important;
+}
+
+/* ===== АГРЕССИВНОЕ ПЕРЕОПРЕДЕЛЕНИЕ ВСЕХ ЗЕЛЕНЫХ ЦВЕТОВ ===== */
+
+/* Убираем все зеленые цвета и градиенты */
+body.accessibility-mode * {
+    background-image: none !important;
+}
+
+body.accessibility-mode *[style*="background"] {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+}
+
+body.accessibility-mode *[style*="color: #228B22"],
+body.accessibility-mode *[style*="color: #2F4F2F"],
+body.accessibility-mode *[style*="color: var(--color-primary)"],
+body.accessibility-mode *[style*="background: #228B22"],
+body.accessibility-mode *[style*="background: #2F4F2F"],
+body.accessibility-mode *[style*="background: var(--color-primary)"],
+body.accessibility-mode *[style*="border: 2px solid #228B22"],
+body.accessibility-mode *[style*="border-bottom: 2px solid #228B22"] {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+    border-color: #FFFF00 !important;
+}
+
+/* Переопределение конкретных элементов со страницы about.html */
+body.accessibility-mode .page-header h1 {
+    color: #FFFF00 !important;
+}
+
+body.accessibility-mode .page-header::before,
+body.accessibility-mode .page-header::after {
+    background: #FFFF00 !important;
+    border-color: #000000 !important;
+}
+
+/* Переопределение для sitemap.html */
+body.accessibility-mode .sitemap-list li::marker {
+    color: #FFFF00 !important;
+}
+
+/* Альтернативные схемы для агрессивного переопределения */
+body.accessibility-mode.color-white-black * {
+    background-image: none !important;
+}
+
+body.accessibility-mode.color-white-black *[style*="background"] {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black *[style*="color: #228B22"],
+body.accessibility-mode.color-white-black *[style*="color: #2F4F2F"],
+body.accessibility-mode.color-white-black *[style*="color: var(--color-primary)"],
+body.accessibility-mode.color-white-black *[style*="background: #228B22"],
+body.accessibility-mode.color-white-black *[style*="background: #2F4F2F"],
+body.accessibility-mode.color-white-black *[style*="background: var(--color-primary)"],
+body.accessibility-mode.color-white-black *[style*="border: 2px solid #228B22"],
+body.accessibility-mode.color-white-black *[style*="border-bottom: 2px solid #228B22"] {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .page-header h1 {
+    color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black .sitemap-list li::marker {
+    color: #000000 !important;
+}
+
+body.accessibility-mode.color-black-white * {
+    background-image: none !important;
+}
+
+body.accessibility-mode.color-black-white *[style*="background"] {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white *[style*="color: #228B22"],
+body.accessibility-mode.color-black-white *[style*="color: #2F4F2F"],
+body.accessibility-mode.color-black-white *[style*="color: var(--color-primary)"],
+body.accessibility-mode.color-black-white *[style*="background: #228B22"],
+body.accessibility-mode.color-black-white *[style*="background: #2F4F2F"],
+body.accessibility-mode.color-black-white *[style*="background: var(--color-primary)"],
+body.accessibility-mode.color-black-white *[style*="border: 2px solid #228B22"],
+body.accessibility-mode.color-black-white *[style*="border-bottom: 2px solid #228B22"] {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border-color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .page-header h1 {
+    color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white .sitemap-list li::marker {
+    color: #FFFFFF !important;
+}
+
+/* ===== УНИВЕРСАЛЬНОЕ ПЕРЕОПРЕДЕЛЕНИЕ ВСЕХ ЦВЕТОВ ДЛЯ МАКСИМАЛЬНОГО КОНТРАСТА ===== */
+
+/* ОСНОВНАЯ СХЕМА: ЖЕЛТЫЙ ТЕКСТ НА ЧЕРНОМ ФОНЕ */
+body.accessibility-mode *,
+body.accessibility-mode *::before,
+body.accessibility-mode *::after {
+    color: #FFFF00 !important;
+    background-color: #000000 !important;
+    border-color: #FFFF00 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+/* Переопределяем ВСЕ возможные серые цвета */
+body.accessibility-mode *[style*="color: #"],
+body.accessibility-mode *[style*="color: var("],
+body.accessibility-mode *[style*="color: rgb"],
+body.accessibility-mode .text-muted,
+body.accessibility-mode .text-secondary,
+body.accessibility-mode .text-gray,
+body.accessibility-mode .text-dark,
+body.accessibility-mode .text-light,
+body.accessibility-mode .text-primary,
+body.accessibility-mode .text-success,
+body.accessibility-mode .text-info,
+body.accessibility-mode .text-warning,
+body.accessibility-mode .text-danger {
+    color: #FFFF00 !important;
+}
+
+/* Переопределяем все возможные фоны */
+body.accessibility-mode *[style*="background"],
+body.accessibility-mode .bg-primary,
+body.accessibility-mode .bg-secondary,
+body.accessibility-mode .bg-success,
+body.accessibility-mode .bg-info,
+body.accessibility-mode .bg-warning,
+body.accessibility-mode .bg-danger,
+body.accessibility-mode .bg-light,
+body.accessibility-mode .bg-dark,
+body.accessibility-mode .bg-white,
+body.accessibility-mode .bg-gray {
+    background-color: #000000 !important;
+    color: #FFFF00 !important;
+}
+
+/* Специальные элементы с принудительным контрастом */
+body.accessibility-mode input,
+body.accessibility-mode textarea,
+body.accessibility-mode select,
+body.accessibility-mode button {
+    background-color: #FFFF00 !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+}
+
+body.accessibility-mode input:focus,
+body.accessibility-mode textarea:focus,
+body.accessibility-mode select:focus,
+body.accessibility-mode button:focus {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+    outline: 3px solid #000000 !important;
+}
+
+/* Ссылки и кнопки */
+body.accessibility-mode a,
+body.accessibility-mode .btn,
+body.accessibility-mode button,
+body.accessibility-mode .link {
+    color: #FFFF00 !important;
+    background-color: #000000 !important;
+    text-decoration: underline !important;
+    border-color: #FFFF00 !important;
+}
+
+body.accessibility-mode a:hover,
+body.accessibility-mode .btn:hover,
+body.accessibility-mode button:hover,
+body.accessibility-mode .link:hover {
+    background-color: #FFFF00 !important;
+    color: #000000 !important;
+}
+
+/* БЕЛАЯ СХЕМА: ЧЕРНЫЙ ТЕКСТ НА БЕЛОМ ФОНЕ */
+body.accessibility-mode.color-white-black *,
+body.accessibility-mode.color-white-black *::before,
+body.accessibility-mode.color-white-black *::after {
+    color: #000000 !important;
+    background-color: #FFFFFF !important;
+    border-color: #000000 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+body.accessibility-mode.color-white-black *[style*="color: #"],
+body.accessibility-mode.color-white-black *[style*="color: var("],
+body.accessibility-mode.color-white-black *[style*="color: rgb"],
+body.accessibility-mode.color-white-black .text-muted,
+body.accessibility-mode.color-white-black .text-secondary,
+body.accessibility-mode.color-white-black .text-gray,
+body.accessibility-mode.color-white-black .text-dark,
+body.accessibility-mode.color-white-black .text-light,
+body.accessibility-mode.color-white-black .text-primary,
+body.accessibility-mode.color-white-black .text-success,
+body.accessibility-mode.color-white-black .text-info,
+body.accessibility-mode.color-white-black .text-warning,
+body.accessibility-mode.color-white-black .text-danger {
+    color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black *[style*="background"],
+body.accessibility-mode.color-white-black .bg-primary,
+body.accessibility-mode.color-white-black .bg-secondary,
+body.accessibility-mode.color-white-black .bg-success,
+body.accessibility-mode.color-white-black .bg-info,
+body.accessibility-mode.color-white-black .bg-warning,
+body.accessibility-mode.color-white-black .bg-danger,
+body.accessibility-mode.color-white-black .bg-light,
+body.accessibility-mode.color-white-black .bg-dark,
+body.accessibility-mode.color-white-black .bg-white,
+body.accessibility-mode.color-white-black .bg-gray {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black input,
+body.accessibility-mode.color-white-black textarea,
+body.accessibility-mode.color-white-black select,
+body.accessibility-mode.color-white-black button {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+}
+
+body.accessibility-mode.color-white-black a,
+body.accessibility-mode.color-white-black .btn,
+body.accessibility-mode.color-white-black button,
+body.accessibility-mode.color-white-black .link {
+    color: #000000 !important;
+    background-color: #FFFFFF !important;
+    border-color: #000000 !important;
+}
+
+body.accessibility-mode.color-white-black a:hover,
+body.accessibility-mode.color-white-black .btn:hover,
+body.accessibility-mode.color-white-black button:hover {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+}
+
+/* ЧЕРНАЯ СХЕМА: БЕЛЫЙ ТЕКСТ НА ЧЕРНОМ ФОНЕ */
+body.accessibility-mode.color-black-white *,
+body.accessibility-mode.color-black-white *::before,
+body.accessibility-mode.color-black-white *::after {
+    color: #FFFFFF !important;
+    background-color: #000000 !important;
+    border-color: #FFFFFF !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+body.accessibility-mode.color-black-white *[style*="color: #"],
+body.accessibility-mode.color-black-white *[style*="color: var("],
+body.accessibility-mode.color-black-white *[style*="color: rgb"],
+body.accessibility-mode.color-black-white .text-muted,
+body.accessibility-mode.color-black-white .text-secondary,
+body.accessibility-mode.color-black-white .text-gray,
+body.accessibility-mode.color-black-white .text-dark,
+body.accessibility-mode.color-black-white .text-light,
+body.accessibility-mode.color-black-white .text-primary,
+body.accessibility-mode.color-black-white .text-success,
+body.accessibility-mode.color-black-white .text-info,
+body.accessibility-mode.color-black-white .text-warning,
+body.accessibility-mode.color-black-white .text-danger {
+    color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white *[style*="background"],
+body.accessibility-mode.color-black-white .bg-primary,
+body.accessibility-mode.color-black-white .bg-secondary,
+body.accessibility-mode.color-black-white .bg-success,
+body.accessibility-mode.color-black-white .bg-info,
+body.accessibility-mode.color-black-white .bg-warning,
+body.accessibility-mode.color-black-white .bg-danger,
+body.accessibility-mode.color-black-white .bg-light,
+body.accessibility-mode.color-black-white .bg-dark,
+body.accessibility-mode.color-black-white .bg-white,
+body.accessibility-mode.color-black-white .bg-gray {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white input,
+body.accessibility-mode.color-black-white textarea,
+body.accessibility-mode.color-black-white select,
+body.accessibility-mode.color-black-white button {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white a,
+body.accessibility-mode.color-black-white .btn,
+body.accessibility-mode.color-black-white button,
+body.accessibility-mode.color-black-white .link {
+    color: #FFFFFF !important;
+    background-color: #000000 !important;
+    border-color: #FFFFFF !important;
+}
+
+body.accessibility-mode.color-black-white a:hover,
+body.accessibility-mode.color-black-white .btn:hover,
+body.accessibility-mode.color-black-white button:hover {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+} 

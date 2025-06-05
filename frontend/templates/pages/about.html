@@ -1,0 +1,564 @@
+{% extends "base.html" %}
+
+{% block title %}О департаменте - Департамент лесного хозяйства{% endblock %}
+
+{% block meta_description %}Информация о Департаменте лесного хозяйства: структура, функции, руководство, контакты и направления деятельности по охране лесных ресурсов.{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item">О департаменте</li>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Заголовок страницы -->
+    <div class="page-header">
+        <h1 class="page-title">О департаменте лесного хозяйства</h1>
+        <p class="page-subtitle">
+            Департамент лесного хозяйства является территориальным органом, осуществляющим 
+            государственное управление в области использования, охраны, защиты и воспроизводства лесов.
+        </p>
+    </div>
+
+    <!-- Основная информация -->
+    <section class="section">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="content-block">
+                    <h2>Основные функции департамента</h2>
+                    <ul class="function-list">
+                        <li>Проведение государственной инвентаризации лесов</li>
+                        <li>Организация лесного семеноводства</li>
+                        <li>Лесопатологический мониторинг на землях лесного фонда</li>
+                        <li>Проектирование лесничеств и лесопарков</li>
+                        <li>Контроль за правовым регулированием лесных отношений</li>
+                        <li>Государственный лесной контроль и надзор</li>
+                        <li>Семенной контроль семян лесных растений</li>
+                        <li>Формирование федеральных информационных ресурсов</li>
+                        <li>Международное сотрудничество в сфере лесного хозяйства</li>
+                    </ul>
+                </div>
+
+                <div class="content-block">
+                    <h2>Структура департамента</h2>
+                    <div class="structure-grid">
+                        <div class="structure-item">
+                            <h3>Отдел контроля</h3>
+                            <p>Контроль за исполнением переданных полномочий в области лесных отношений</p>
+                        </div>
+                        <div class="structure-item">
+                            <h3>Отдел воспроизводства</h3>
+                            <p>Контроль и анализ использования лесов, воспроизводство лесных ресурсов</p>
+                        </div>
+                        <div class="structure-item">
+                            <h3>Отдел мониторинга</h3>
+                            <p>Мониторинг, анализ охраны и защиты лесов от пожаров и вредителей</p>
+                        </div>
+                        <div class="structure-item">
+                            <h3>Отдел лесного контроля</h3>
+                            <p>Федеральный государственный лесной контроль и надзор в сфере оборота древесины</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="sidebar">
+                    <!-- Контакты -->
+                    <div class="contact-card">
+                        <h3>Контактная информация</h3>
+                        <div class="contact-item">
+                            <strong>Адрес:</strong>
+                            <p>г. Москва, ул. Лесная, д. 1</p>
+                        </div>
+                        <div class="contact-item">
+                            <strong>Телефон:</strong>
+                            <p><a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
+                        </div>
+                        <div class="contact-item">
+                            <strong>Email:</strong>
+                            <p><a href="mailto:info@dlh.gov.ru">info@dlh.gov.ru</a></p>
+                        </div>
+                        <div class="contact-item">
+                            <strong>Режим работы:</strong>
+                            <p>Пн-Пт: 9:00 - 18:00<br>Сб-Вс: выходной</p>
+                        </div>
+                    </div>
+
+                    <!-- Документы -->
+                    <div class="documents-card" id="documents">
+                        <h3>Основные документы</h3>
+                        <ul class="document-list">
+                            <li><a href="{{ url_for('static', filename='documents/polojenie_o_departamente.txt') }}" download>Положение о департаменте</a></li>
+                            <li><a href="{{ url_for('static', filename='documents/struktura_i_shtatnoe_raspisanie.txt') }}" download>Структура и штатное расписание</a></li>
+                            <li><a href="{{ url_for('static', filename='documents/administrativnyi_reglament.txt') }}" download>Административный регламент</a></li>
+                            <li><a href="{{ url_for('static', filename='documents/plany_i_otchety.txt') }}" download>Планы и отчеты</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Руководство -->
+    <section class="section leadership-section" id="leadership">
+        <h2 class="section-title">Руководство департамента</h2>
+        <div class="leadership-grid">
+            <div class="leader-card">
+                <div class="leader-photo">
+                    <img src="{{ url_for('static', filename='images/leadership/director.jpeg') }}" 
+                         alt="Фото начальника департамента">
+                </div>
+                <div class="leader-info">
+                    <h3>Иванов Иван Иванович</h3>
+                    <p class="leader-position">Начальник департамента</p>
+                    <p class="leader-description">
+                        Кандидат сельскохозяйственных наук, стаж работы в лесном хозяйстве более 20 лет.
+                        Руководит департаментом с 2020 года.
+                    </p>
+                    <div class="leader-contacts">
+                        <p><strong>Приемная:</strong> <a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
+                        <p><strong>Email:</strong> <a href="mailto:director@dlh.gov.ru">director@dlh.gov.ru</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="leader-card">
+                <div class="leader-photo">
+                    <img src="{{ url_for('static', filename='images/leadership/deputy.jpeg') }}" 
+                         alt="Фото заместителя начальника">
+                </div>
+                <div class="leader-info">
+                    <h3>Петрова Мария Сергеевна</h3>
+                    <p class="leader-position">Заместитель начальника департамента</p>
+                    <p class="leader-description">
+                        Специалист в области экологии и природопользования, курирует вопросы 
+                        лесовосстановления и экологического мониторинга.
+                    </p>
+                    <div class="leader-contacts">
+                        <p><strong>Телефон:</strong> <a href="tel:+74951234568">+7 (495) 123-45-68</a></p>
+                        <p><strong>Email:</strong> <a href="mailto:deputy@dlh.gov.ru">deputy@dlh.gov.ru</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- История -->
+    <section class="section history-section">
+        <h2 class="section-title">История и достижения</h2>
+        <div class="timeline">
+            {% for news in history_news %}
+            <div class="timeline-item">
+                <div class="timeline-year">{{ news.created_at.year }}</div>
+                <div class="timeline-content">
+                    <h3>
+                        <a href="{{ url_for('main.news_detail', id=news.id) }}" class="timeline-link">
+                            {{ news.title }}
+                        </a>
+                    </h3>
+                    <p>{{ news.summary or news.content[:150] + '...' }}</p>
+                    <div class="timeline-footer">
+                        <time datetime="{{ news.created_at.isoformat() }}" class="timeline-date">
+                            {{ news.created_at.strftime('%d %B %Y').replace('January', 'января').replace('February', 'февраля').replace('March', 'марта').replace('April', 'апреля').replace('May', 'мая').replace('June', 'июня').replace('July', 'июля').replace('August', 'августа').replace('September', 'сентября').replace('October', 'октября').replace('November', 'ноября').replace('December', 'декабря') }}
+                        </time>
+                        <a href="{{ url_for('main.news_detail', id=news.id) }}" class="timeline-read-more">
+                            Подробнее →
+                        </a>
+            </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+<style>
+/* Стили для страницы "О департаменте" */
+.page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-3xl);
+    padding: var(--spacing-lg) 0;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--color-white);
+    margin-bottom: var(--spacing-lg);
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-white);
+    max-width: 800px;
+    margin: 0 auto;
+    opacity: 0.9;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-3xl);
+    margin-bottom: var(--spacing-3xl);
+}
+
+.content-block {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.content-block h2 {
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    color: var(--color-gray-800);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.function-list {
+    list-style: none;
+    padding: 0;
+}
+
+.function-list li {
+    padding: var(--spacing-sm) 0;
+    padding-left: var(--spacing-lg);
+    position: relative;
+    color: var(--color-gray-700);
+}
+
+.function-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+.structure-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.structure-item {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.structure-item h3 {
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-lg);
+}
+
+.sidebar {
+    /* Убираем sticky позиционирование */
+}
+
+.contact-card,
+.documents-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.contact-card h3,
+.documents-card h3 {
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--font-size-lg);
+    border-bottom: 1px solid var(--color-gray-200);
+    padding-bottom: var(--spacing-sm);
+}
+
+.contact-item {
+    margin-bottom: var(--spacing-md);
+}
+
+.contact-item strong {
+    color: var(--color-gray-800);
+    display: block;
+    margin-bottom: var(--spacing-xs);
+}
+
+.contact-item p {
+    color: var(--color-gray-600);
+    margin: 0;
+}
+
+.contact-item a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.contact-item a:hover {
+    text-decoration: underline;
+}
+
+.document-list {
+    list-style: none;
+    padding: 0;
+}
+
+.document-list li {
+    margin-bottom: var(--spacing-sm);
+}
+
+.document-list a {
+    color: var(--color-primary);
+    text-decoration: none;
+    padding: var(--spacing-xs) 0;
+    display: block;
+    transition: color var(--transition-fast);
+}
+
+.document-list a:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+/* Добавляем больше отступов между секциями */
+.leadership-section {
+    margin-top: var(--spacing-4xl);
+    padding-top: var(--spacing-3xl);
+    border-top: 1px solid var(--color-gray-200);
+}
+
+.leadership-section .section-title {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.history-section {
+    margin-top: var(--spacing-4xl);
+    padding-top: var(--spacing-3xl);
+    border-top: 1px solid var(--color-gray-200);
+}
+
+.history-section .section-title {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.leadership-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: var(--spacing-2xl);
+}
+
+.leader-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-base);
+}
+
+.leader-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.leader-photo {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.leader-photo img {
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--color-primary);
+}
+
+.leader-info h3 {
+    color: var(--color-gray-800);
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-xl);
+    text-align: center;
+}
+
+.leader-position {
+    color: var(--color-primary);
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.leader-description {
+    color: var(--color-gray-600);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+}
+
+.leader-contacts p {
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+}
+
+.timeline {
+    position: relative;
+    padding-left: var(--spacing-xl);
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--color-primary);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: var(--spacing-xl);
+    display: flex;
+    gap: var(--spacing-lg);
+}
+
+.timeline-year {
+    background: var(--color-primary);
+    color: var(--color-white);
+    padding: var(--spacing-sm) var(--spacing-md);
+    padding-top: calc(var(--spacing-sm) + 12px);
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    min-width: 80px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.timeline-year::before {
+    content: '';
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: var(--color-primary);
+    border: 3px solid var(--color-white);
+    border-radius: 50%;
+}
+
+.timeline-content {
+    flex: 1;
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.timeline-content h3 {
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-lg);
+}
+
+.timeline-content p {
+    color: var(--color-gray-600);
+    line-height: 1.6;
+}
+
+.timeline-link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.timeline-link:hover {
+    text-decoration: underline;
+}
+
+.timeline-date {
+    color: var(--color-gray-600);
+    font-size: var(--font-size-sm);
+}
+
+.timeline-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-sm);
+}
+
+.timeline-read-more {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.timeline-read-more:hover {
+    text-decoration: underline;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .row {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xl);
+    }
+    
+    .page-title {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .leadership-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .leader-photo img {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .structure-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .timeline {
+        padding-left: var(--spacing-lg);
+    }
+    
+    .timeline-item {
+        flex-direction: column;
+    }
+    
+    .timeline-year::before {
+        left: -25px;
+    }
+}
+</style>
+
+<script>
+// Обработка ошибки загрузки изображений руководителей
+document.addEventListener('DOMContentLoaded', function() {
+    const leaderImages = document.querySelectorAll('.leader-photo img');
+    const placeholderUrl = "{{ url_for('static', filename='images/placeholder-leader.svg') }}";
+    
+    leaderImages.forEach(function(img) {
+        img.addEventListener('error', function() {
+            this.src = placeholderUrl;
+        });
+    });
+});
+</script>
+{% endblock %} 

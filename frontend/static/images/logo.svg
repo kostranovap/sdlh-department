@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <!-- Фон щита -->
+  <path d="M40 5 L15 20 L15 50 C15 60 25 70 40 75 C55 70 65 60 65 50 L65 20 Z" 
+        fill="#2e5b31" stroke="#1e3e21" stroke-width="2"/>
+  
+  <!-- Ёлка -->
+  <path d="M40 20 L32 35 L48 35 Z" fill="#4a7c4f"/>
+  <path d="M40 30 L30 45 L50 45 Z" fill="#4a7c4f"/>
+  <path d="M40 40 L28 55 L52 55 Z" fill="#4a7c4f"/>
+  
+  <!-- Ствол -->
+  <rect x="38" y="55" width="4" height="8" fill="#8b4513"/>
+  
+  <!-- Звезда наверху -->
+  <path d="M40 10 L42 16 L48 16 L43 20 L45 26 L40 22 L35 26 L37 20 L32 16 L38 16 Z" 
+        fill="#ffd700" stroke="#ffaa00" stroke-width="0.5"/>
+  
+  <!-- Текст -->
+  <text x="40" y="72" text-anchor="middle" font-family="serif" font-size="6" fill="white" font-weight="bold">ДЛХР</text>
+</svg> 

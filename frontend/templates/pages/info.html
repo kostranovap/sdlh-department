@@ -1,0 +1,669 @@
+{% extends "base.html" %}
+
+{% block title %}Подача заявлений - Департамент лесного хозяйства{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item active">Подача заявлений</li>
+{% endblock %}
+
+{% block additional_head %}
+<style>
+/* Стили страницы подачи заявлений */
+.applications-page {
+    padding: 2rem 0 4rem;
+    --color-primary-rgb: 76, 122, 85;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-gray-800);
+    margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    color: var(--color-gray-600);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Главный контейнер для услуг и формы */
+.services-form-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 1.5rem;
+}
+
+/* Объединенный контейнер для услуг и программ */
+.combined-section {
+    height: 600px;
+    border: 2px solid var(--color-primary);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-bottom: 4px solid var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.section-header {
+    background: var(--color-white);
+    color: var(--color-primary);
+    padding: 1rem 1.5rem;
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-primary);
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--color-primary);
+}
+
+.section-tabs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Маленькие кнопки переключения */
+.tab-button {
+    background: transparent;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    padding: 0.3rem 0.8rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    min-width: 60px;
+    text-align: center;
+}
+
+.tab-button:hover {
+    background: rgba(var(--color-primary-rgb), 0.1);
+}
+
+.tab-button.active {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.section-content {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    flex-grow: 1;
+    height: 100%;
+}
+
+/* Детальная информация слева - выравнивание по левому краю */
+.detail-content {
+    padding: 1.5rem;
+    background: var(--color-gray-50);
+    color: var(--color-gray-500);
+    font-size: 0.9rem;
+    overflow-y: auto;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-content.active {
+    background: var(--color-white);
+    color: var(--color-gray-800);
+}
+
+.detail-content.empty {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.detail-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-gray-800);
+    margin-bottom: 0.8rem;
+    text-align: left;
+}
+
+.detail-description {
+    font-size: 0.9rem;
+    color: var(--color-gray-600);
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.detail-section {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.detail-section h5 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 0.3rem;
+    text-align: left;
+}
+
+.detail-section p {
+    color: var(--color-gray-600);
+    line-height: 1.5;
+    margin: 0;
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+/* Списки услуг/программ справа */
+.items-list-container {
+    border-left: 2px solid var(--color-primary);
+    background: var(--color-primary);
+}
+
+.items-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    overflow-y: auto;
+    display: none;
+}
+
+.items-list.active {
+    display: block;
+}
+
+.list-item {
+    padding: 1.2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--color-primary);
+    color: var(--color-white);
+    text-align: left;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.list-item.active {
+    background: var(--color-white);
+    color: var(--color-primary);
+}
+
+.list-item h4 {
+    margin-bottom: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4;
+    text-align: left;
+}
+
+.list-item p {
+    margin: 0;
+    font-size: 0.8rem;
+    opacity: 0.8;
+    line-height: 1.3;
+    text-align: left;
+}
+
+.list-item.active p {
+    opacity: 1;
+}
+
+/* Скроллбар для списков */
+.items-list::-webkit-scrollbar,
+.detail-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.items-list::-webkit-scrollbar-track,
+.detail-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.items-list::-webkit-scrollbar-thumb,
+.detail-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+.items-list::-webkit-scrollbar-thumb:hover,
+.detail-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Форма подачи заявления */
+.application-section {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-bottom: 4px solid var(--color-gray-800);
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    box-sizing: border-box;
+    margin-top: 1rem;
+}
+
+.form-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    text-align: center;
+    color: var(--color-white);
+}
+
+.application-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100% - 50px);
+    box-sizing: border-box;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-group {
+    margin-bottom: 0.4rem;
+    text-align: left;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-label {
+    display: block;
+    font-weight: 500;
+    color: var(--color-white);
+    margin-bottom: 0.25rem;
+    font-size: 0.8rem;
+    text-align: left;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-white);
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.form-select {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--color-white);
+    height: 2.3rem;
+}
+
+.form-select option {
+    background: var(--color-primary);
+    color: var(--color-white);
+    padding: 0.4rem;
+    text-align: left;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+    text-align: left;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--color-white);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.form-textarea {
+    min-height: 60px;
+    max-height: 60px;
+    resize: none;
+}
+
+.form-submit {
+    width: 100%;
+    padding: 0.45rem;
+    background: var(--color-white);
+    color: var(--color-primary);
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 0;
+    box-sizing: border-box;
+}
+
+.form-submit:hover {
+    background: var(--color-gray-100);
+    transform: translateY(-1px);
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .services-form-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .combined-section, 
+    .application-section {
+        height: auto;
+        max-height: 600px;
+        width: 100%;
+    }
+    
+    .section-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .items-list-container {
+        border-left: none;
+        border-top: 2px solid var(--color-primary);
+    }
+    
+    .items-list {
+        height: 200px;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .section-title {
+        font-size: 1rem;
+    }
+    
+    .list-item {
+        padding: 0.8rem;
+    }
+    
+    .detail-content {
+        padding: 1rem;
+    }
+    
+    .application-section {
+        padding: 1rem;
+        max-width: 100%;
+    }
+
+    .tab-button {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.6rem;
+        min-width: 50px;
+    }
+
+    .section-header {
+        padding: 0.8rem 1rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="applications-page">
+        <!-- Заголовок страницы -->
+        <div class="page-header">
+            <h1 class="page-title">Подача заявлений</h1>
+            <p class="page-subtitle">Подайте заявку на получение государственных услуг или участие в экологических программах</p>
+        </div>
+
+        <!-- Двухколоночный контейнер для услуг и формы -->
+        <div class="services-form-container">
+            <!-- Единый раздел для услуг и программ (левая колонка) -->
+            <div class="combined-section">
+                <div class="section-header">
+                    <h2 class="section-title">Выберите тип заявки</h2>
+                    <div class="section-tabs">
+                        <button class="tab-button active" data-tab="services">Услуги</button>
+                        <button class="tab-button" data-tab="programs">Программы</button>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div id="combined-detail" class="detail-content empty">
+                        Выберите услугу или программу из списка справа для просмотра подробной информации
+                    </div>
+                    
+                    <div class="items-list-container">
+                        <!-- Список услуг -->
+                        <ul class="items-list active" id="services-list">
+                            {% for service in services %}
+                            <li class="list-item" data-type="service" data-id="{{ service.id }}">
+                                <h4>{{ service.name }}</h4>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        
+                        <!-- Список программ -->
+                        <ul class="items-list" id="programs-list">
+                            {% for program in programs %}
+                            <li class="list-item" data-type="program" data-id="{{ program.id }}">
+                                <h4>{{ program.name }}</h4>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Форма подачи заявления (правая колонка) -->
+            <div class="application-section">
+                <h2 class="form-title">Подача заявления</h2>
+                <form method="POST" class="application-form">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            {{ form.service_id.label(class="form-label") }}
+                            {{ form.service_id(class="form-select") }}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.full_name.label(class="form-label") }}
+                            {{ form.full_name(class="form-input", placeholder="Иванов Иван Иванович") }}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-input", placeholder="email@example.com") }}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.phone.label(class="form-label") }}
+                            {{ form.phone(class="form-input", placeholder="+7 (XXX) XXX-XX-XX") }}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.organization.label(class="form-label") }}
+                            {{ form.organization(class="form-input", placeholder="Название организации") }}
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-textarea", placeholder="Краткое описание заявки...") }}
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="form-submit">
+                        Подать заявление
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Данные услуг и программ для JavaScript
+const servicesData = JSON.parse('{{ services|tojson|safe }}');
+const programsData = JSON.parse('{{ programs|tojson|safe }}');
+
+// Добавляем обработчики событий после загрузки DOM
+document.addEventListener('DOMContentLoaded', function() {
+    // Обработчики для переключения вкладок
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const tab = this.dataset.tab;
+            switchTab(tab);
+        });
+    });
+
+    // Добавляем обработчики кликов для всех элементов списка
+    document.querySelectorAll('.list-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const type = this.dataset.type;
+            const id = parseInt(this.dataset.id);
+            showDetail(type, id);
+        });
+    });
+});
+
+// Переключение вкладок
+function switchTab(tab) {
+    // Убираем активный класс со всех кнопок
+    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+    
+    // Добавляем активный класс к выбранной кнопке
+    document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+    
+    // Скрываем все списки
+    document.querySelectorAll('.items-list').forEach(list => list.classList.remove('active'));
+    
+    // Показываем нужный список
+    document.getElementById(tab + '-list').classList.add('active');
+    
+    // Очищаем детальную информацию
+    const detailDiv = document.getElementById('combined-detail');
+    detailDiv.innerHTML = 'Выберите ' + (tab === 'services' ? 'услугу' : 'программу') + ' из списка справа для просмотра подробной информации';
+    detailDiv.classList.remove('active');
+    detailDiv.classList.add('empty');
+    
+    // Убираем активный класс со всех элементов списка
+    document.querySelectorAll('.list-item').forEach(item => item.classList.remove('active'));
+}
+
+// Показ детальной информации
+function showDetail(type, id) {
+    const data = type === 'service' ? servicesData : programsData;
+    const item = data.find(item => item.id === id);
+    const detailDiv = document.getElementById('combined-detail');
+    
+    if (!item) return;
+    
+    // Убираем активный класс со всех элементов
+    document.querySelectorAll('.list-item').forEach(el => el.classList.remove('active'));
+    
+    // Добавляем активный класс к выбранному элементу
+    document.querySelector(`[data-type="${type}"][data-id="${id}"]`).classList.add('active');
+    
+    // Формируем HTML для детальной информации с выравниванием по левому краю
+    let detailHTML = `
+        <div style="text-align: left;">
+            <h3 class="detail-title">${item.name}</h3>
+            <p class="detail-description">${item.description}</p>
+    `;
+    
+    if (type === 'service') {
+        if (item.requirements) {
+            detailHTML += `<div class="detail-section"><h5>Требования</h5><p>${item.requirements}</p></div>`;
+        }
+        if (item.documents_needed) {
+            detailHTML += `<div class="detail-section"><h5>Необходимые документы</h5><p>${item.documents_needed}</p></div>`;
+        }
+        if (item.processing_time) {
+            detailHTML += `<div class="detail-section"><h5>Срок обработки</h5><p>${item.processing_time}</p></div>`;
+        }
+        if (item.cost) {
+            detailHTML += `<div class="detail-section"><h5>Стоимость</h5><p>${item.cost}</p></div>`;
+        }
+    } else {
+        if (item.objectives) {
+            detailHTML += `<div class="detail-section"><h5>Цели программы</h5><p>${item.objectives}</p></div>`;
+        }
+        if (item.requirements) {
+            detailHTML += `<div class="detail-section"><h5>Требования для участия</h5><p>${item.requirements}</p></div>`;
+        }
+        if (item.benefits) {
+            detailHTML += `<div class="detail-section"><h5>Льготы и преимущества</h5><p>${item.benefits}</p></div>`;
+        }
+        if (item.duration) {
+            detailHTML += `<div class="detail-section"><h5>Срок действия</h5><p>${item.duration}</p></div>`;
+        }
+        if (item.funding) {
+            detailHTML += `<div class="detail-section"><h5>Финансирование</h5><p>${item.funding}</p></div>`;
+        }
+    }
+    
+    if (item.contact_info) {
+        detailHTML += `<div class="detail-section"><h5>Контактная информация</h5><p>${item.contact_info}</p></div>`;
+    }
+    
+    detailHTML += '</div>';
+    
+    detailDiv.innerHTML = detailHTML;
+    detailDiv.classList.remove('empty');
+    detailDiv.classList.add('active');
+}
+
+</script>
+
+{% if show_login_modal %}
+<script>
+// Автоматически открываем модальное окно если нужна авторизация
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        openAuthModal('login');
+    }, 500);
+});
+</script>
+{% endif %}
+{% endblock %} 

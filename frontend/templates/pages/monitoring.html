@@ -1,0 +1,1121 @@
+{% extends "base.html" %}
+
+{% block title %}Мониторинг лесов - Департамент лесного хозяйства{% endblock %}
+
+{% block meta_description %}Мониторинг состояния лесов: данные о лесных пожарах, карты, статистика лесопользования, экологический мониторинг и охрана лесных ресурсов.{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item">Мониторинг лесов</li>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Заголовок страницы -->
+    <div class="page-header">
+        <h1 class="page-title">Мониторинг лесов</h1>
+        <p class="page-subtitle">
+            Система непрерывного наблюдения за состоянием лесных ресурсов региона с использованием 
+            спутниковых технологий и наземных станций мониторинга
+        </p>
+    </div>
+
+    <!-- Текущее состояние -->
+    <section class="section">
+        <h2 class="section-title current-state-title">Текущее состояние лесов</h2>
+        <div class="monitoring-dashboard current-state-dashboard">
+            <div class="stats-grid">
+                <div class="stat-card danger-level">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-content">
+                        <span class="stat-number">{{ fire_danger_class or 'II' }}</span>
+                        <div class="stat-label">Класс пожарной опасности</div>
+                        <div class="stat-description">Умеренная опасность</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">🌡️</div>
+                    <div class="stat-content">
+                        <span class="stat-number">{{ temperature or '+18°C' }}</span>
+                        <div class="stat-label">Средняя температура</div>
+                        <div class="stat-description">За последние 7 дней</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">💧</div>
+                    <div class="stat-content">
+                        <span class="stat-number">{{ humidity or '65%' }}</span>
+                        <div class="stat-label">Влажность воздуха</div>
+                        <div class="stat-description">Относительная влажность</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">💨</div>
+                    <div class="stat-content">
+                        <span class="stat-number">{{ wind_speed or '12 м/с' }}</span>
+                        <div class="stat-label">Скорость ветра</div>
+                        <div class="stat-description">Средняя за сутки</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Последние предупреждения -->
+    <section class="section">
+        <h2 class="section-title alerts-section-title">Последние предупреждения</h2>
+        <div class="alerts-container">
+            <div class="alert-image-container">
+                <img id="current-alert-image" src="/static/images/default-news.jpg" alt="Изображение предупреждения" class="alert-image">
+            </div>
+            <div class="alerts-list-container">
+                <div class="alerts-list-carousel">
+                    {% for news in alert_news %}
+                    <div class="alert-item {% if loop.first %}active{% endif %}" data-alert-index="{{ loop.index0 }}">
+                        <div class="alert-text">
+                            <strong>
+                                <a href="{{ url_for('main.news_detail', id=news.id) }}" class="alert-link">
+                                    {{ news.title }}
+                                </a>
+                            </strong><br>
+                            <span class="alert-summary">{{ news.summary or news.content[:120] + '...' }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Карты и данные -->
+    <section class="section">
+        <h2 class="section-title maps-section-title">Карты мониторинга</h2>
+        <div class="maps-slider-container">
+            <div class="maps-slider">
+            <div class="map-card">
+                <div class="map-header">
+                    <h3>🔥 Карта лесных пожаров</h3>
+                    <span class="update-time">Обновлено: {{ last_update or '03.01.2025 14:30' }}</span>
+                </div>
+                <div class="map-placeholder">
+                    <div class="map-content">
+                        <p><strong>Активные очаги:</strong> {{ active_fires or '2' }}</p>
+                        <p><strong>Площадь под контролем:</strong> {{ controlled_area or '1.2 тыс. га' }}</p>
+                        <p><strong>Ликвидированных за сутки:</strong> {{ extinguished_fires or '1' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="map-card">
+                <div class="map-header">
+                    <h3>🌲 Состояние лесного покрова</h3>
+                    <span class="update-time">Спутниковая съемка</span>
+                </div>
+                <div class="map-placeholder">
+                    <div class="map-content">
+                        <p><strong>Здоровые леса:</strong> {{ healthy_forests or '89.3%' }}</p>
+                        <p><strong>Поврежденные участки:</strong> {{ damaged_areas or '7.2%' }}</p>
+                        <p><strong>Восстанавливающиеся:</strong> {{ recovering_areas or '3.5%' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="map-card">
+                <div class="map-header">
+                    <h3>📊 Лесопользование</h3>
+                    <span class="update-time">Данные за 2024 год</span>
+                </div>
+                <div class="map-placeholder">
+                    <div class="map-content">
+                        <p><strong>Площадь рубок:</strong> {{ cutting_area or '12.4 тыс. га' }}</p>
+                        <p><strong>Лесовосстановление:</strong> {{ reforestation_area or '15.8 тыс. га' }}</p>
+                        <p><strong>Санитарные рубки:</strong> {{ sanitary_cutting or '3.2 тыс. га' }}</p>
+                    </div>
+                </div>
+                </div>
+
+                <div class="map-card">
+                    <div class="map-header">
+                        <h3>🛰️ Спутниковый мониторинг</h3>
+                        <span class="update-time">В реальном времени</span>
+                    </div>
+                    <div class="map-placeholder">
+                        <div class="map-content">
+                            <p><strong>Обновление данных:</strong> каждые 15 минут</p>
+                            <p><strong>Точность позиционирования:</strong> ±5 метров</p>
+                            <p><strong>Охват территории:</strong> 100%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="map-card">
+                    <div class="map-header">
+                        <h3>📈 Статистика изменений</h3>
+                        <span class="update-time">Анализ за месяц</span>
+                    </div>
+                    <div class="map-placeholder">
+                        <div class="map-content">
+                            <p><strong>Прирост лесных массивов:</strong> +2.1%</p>
+                            <p><strong>Потери от пожаров:</strong> -0.3%</p>
+                            <p><strong>Восстановленные участки:</strong> 847 га</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-btn prev" onclick="slideMaps(-1)">‹</button>
+                <div class="slider-dots maps-dots"></div>
+                <button class="slider-btn next" onclick="slideMaps(1)">›</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Экологический мониторинг -->
+    <section class="section">
+        <h2 class="section-title ecology-section-title">Экологический мониторинг</h2>
+        <div class="ecology-slider-container">
+            <div class="ecology-slider">
+                <div class="monitoring-card">
+                    <div class="card-icon">🦋</div>
+                    <h3>Биоразнообразие</h3>
+                    <div class="monitoring-data">
+                        <div class="data-item">
+                            <span class="data-label">Редкие виды:</span>
+                            <span class="data-value">{{ rare_species or '156' }}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Популяция птиц:</span>
+                            <span class="data-value trend-up">{{ bird_population or '+3.2%' }}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Млекопитающие:</span>
+                            <span class="data-value">{{ mammals or '42 вида' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="monitoring-card">
+                    <div class="card-icon">🌿</div>
+                    <h3>Качество воздуха</h3>
+                    <div class="monitoring-data">
+                        <div class="data-item">
+                            <span class="data-label">Индекс качества:</span>
+                            <span class="data-value quality-good">{{ air_quality or 'Хорошее' }}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">CO₂ поглощение:</span>
+                            <span class="data-value">{{ co2_absorption or '2.3 млн т/год' }}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Кислород выработка:</span>
+                            <span class="data-value">{{ oxygen_production or '1.7 млн т/год' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="monitoring-card">
+                    <div class="card-icon">💧</div>
+                    <h3>Водные ресурсы</h3>
+                    <div class="monitoring-data">
+                        <div class="data-item">
+                            <span class="data-label">Чистота рек:</span>
+                            <span class="data-value quality-excellent">{{ water_quality or 'Отличная' }}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Уровень грунтовых вод:</span>
+                            <span class="data-value">{{ groundwater_level or 'Норма' }}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Защищенные водоемы:</span>
+                            <span class="data-value">{{ protected_waters or '89' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="monitoring-card">
+                    <div class="card-icon">🌡️</div>
+                    <h3>Климатический мониторинг</h3>
+                    <div class="monitoring-data">
+                        <div class="data-item">
+                            <span class="data-label">Среднегодовая температура:</span>
+                            <span class="data-value">+8.2°C</span>
+                    </div>
+                        <div class="data-item">
+                            <span class="data-label">Количество осадков:</span>
+                            <span class="data-value">654 мм/год</span>
+                    </div>
+                        <div class="data-item">
+                            <span class="data-label">Дней без заморозков:</span>
+                            <span class="data-value">189 дней</span>
+                        </div>
+                    </div>
+            </div>
+
+                <div class="monitoring-card">
+                    <div class="card-icon">🔬</div>
+                    <h3>Состояние почв</h3>
+                    <div class="monitoring-data">
+                        <div class="data-item">
+                            <span class="data-label">pH почвы:</span>
+                            <span class="data-value quality-good">6.8 (норма)</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Содержание гумуса:</span>
+                            <span class="data-value">4.2%</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Эрозия почв:</span>
+                            <span class="data-value quality-excellent">Минимальная</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-btn prev" onclick="slideEcology(-1)">‹</button>
+                <div class="slider-dots ecology-dots"></div>
+                <button class="slider-btn next" onclick="slideEcology(1)">›</button>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+/* Стили для страницы мониторинга */
+.page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-3xl);
+    padding: var(--spacing-lg) 0;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: var(--spacing-lg);
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    max-width: 800px;
+    margin: 0 auto;
+    opacity: 0.9;
+}
+
+/* Секция текущего состояния */
+.current-state-title {
+    margin-bottom: var(--spacing-lg);
+}
+
+.current-state-dashboard {
+    background: var(--color-white);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-md);
+    border: 2px solid var(--color-gray-300);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.current-state-dashboard .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+}
+
+.current-state-dashboard .stat-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+    min-height: 60px;
+}
+
+.current-state-dashboard .stat-card:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-primary);
+}
+
+.current-state-dashboard .stat-card.danger-level {
+    border-left: 3px solid var(--color-secondary);
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.05), rgba(255, 107, 107, 0.02));
+}
+
+.current-state-dashboard .stat-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.current-state-dashboard .stat-content {
+    flex: 1;
+}
+
+.current-state-dashboard .stat-number {
+    display: block;
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 2px;
+}
+
+.current-state-dashboard .stat-label {
+    font-weight: 600;
+    color: var(--color-gray-800);
+    margin-bottom: 2px;
+    font-size: var(--font-size-xs);
+}
+
+.current-state-dashboard .stat-description {
+    font-size: var(--font-size-xs);
+    color: var(--color-gray-600);
+    line-height: 1.2;
+}
+
+.monitoring-dashboard {
+    background: var(--color-gray-50);
+    padding: var(--spacing-2xl);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.maps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-3xl);
+}
+
+.map-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-base);
+}
+
+.map-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    background: var(--color-gray-50);
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.map-header h3 {
+    margin: 0;
+    font-size: var(--font-size-lg);
+    color: var(--color-gray-800);
+}
+
+.update-time {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+}
+
+.map-placeholder {
+    height: 200px;
+    background: var(--color-gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.map-content {
+    text-align: center;
+    padding: var(--spacing-lg);
+}
+
+.map-content p {
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-gray-700);
+}
+
+.map-actions {
+    padding: var(--spacing-lg);
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.monitoring-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.monitoring-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+}
+
+.monitoring-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.card-icon {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.monitoring-card h3 {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-gray-800);
+    font-size: var(--font-size-xl);
+}
+
+.monitoring-data {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.data-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid var(--color-gray-100);
+}
+
+.data-item:last-child {
+    border-bottom: none;
+}
+
+.data-label {
+    color: var(--color-gray-600);
+    font-size: var(--font-size-sm);
+}
+
+.data-value {
+    font-weight: 600;
+    color: var(--color-gray-800);
+    font-size: var(--font-size-sm);
+}
+
+.data-value.trend-up {
+    color: var(--color-primary);
+}
+
+.data-value.quality-good {
+    color: #28a745;
+}
+
+.data-value.quality-excellent {
+    color: var(--color-primary);
+}
+
+/* Заголовок секции предупреждений */
+.alerts-section-title {
+    margin-bottom: var(--spacing-2xl);
+}
+
+/* Контейнер предупреждений */
+.alerts-container {
+    display: grid;
+    grid-template-columns: 600px 1fr;
+    gap: 0;
+    background: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--color-gray-200);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    min-height: 485px;
+}
+
+.alert-image-container {
+    position: relative;
+    background: var(--color-gray-100);
+    overflow: hidden;
+}
+
+.alert-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all var(--transition-base);
+}
+
+.alerts-list-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    background: var(--color-white);
+}
+
+.alerts-list-carousel {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+.alert-item {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--color-gray-100);
+    display: flex;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    background: var(--color-white);
+}
+
+.alert-item:hover {
+    background: var(--color-gray-50);
+}
+
+.alert-item.active {
+    background: linear-gradient(135deg, rgba(34, 139, 34, 0.08), rgba(34, 139, 34, 0.04));
+    border-left: 4px solid var(--color-primary);
+}
+
+.alert-item:last-child {
+    border-bottom: none;
+}
+
+.alert-text {
+    flex: 1;
+    color: var(--color-gray-700);
+    line-height: 1.4;
+}
+
+.alert-summary {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+    margin-top: var(--spacing-xs);
+}
+
+.alert-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+}
+
+.alert-link:hover {
+    text-decoration: underline;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .current-state-dashboard .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .maps-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .monitoring-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .map-header {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        align-items: flex-start;
+    }
+    
+    .map-actions {
+        flex-direction: column;
+    }
+    
+    .current-state-dashboard .stats-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+    
+    .current-state-dashboard .stat-card {
+        min-height: 55px;
+        padding: var(--spacing-sm);
+    }
+    
+    .current-state-dashboard .stat-icon {
+        font-size: 1.3rem;
+    }
+    
+    .map-card {
+        flex: 0 0 280px;
+        height: 240px;
+    }
+    
+    .monitoring-card {
+        flex: 0 0 250px;
+        height: 280px;
+    }
+    
+    .map-header {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        align-items: flex-start;
+        padding: var(--spacing-sm);
+        height: auto;
+        min-height: 50px;
+    }
+    
+    .map-placeholder {
+        min-height: 100px;
+    }
+    
+    .alerts-container {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+    
+    .alert-image-container {
+        height: 250px;
+    }
+    
+    .alerts-list-carousel {
+        max-height: 300px;
+    }
+    
+    .alert-item {
+        padding: var(--spacing-sm);
+    }
+}
+
+/* Заголовки разделов */
+.maps-section-title {
+    margin-top: var(--spacing-2xl);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.ecology-section-title {
+    margin-bottom: var(--spacing-2xl);
+}
+
+/* Слайдеры карт и экологии */
+.maps-slider-container,
+.ecology-slider-container {
+    position: relative;
+    margin-bottom: var(--spacing-3xl);
+}
+
+.maps-slider,
+.ecology-slider {
+    display: flex;
+    gap: var(--spacing-lg);
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: var(--spacing-sm);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.maps-slider::-webkit-scrollbar,
+.ecology-slider::-webkit-scrollbar {
+    display: none;
+}
+
+/* Строгие карточки карт */
+.map-card {
+    flex: 0 0 350px;
+    height: 280px;
+    background: var(--color-white);
+    border: 2px solid var(--color-gray-300);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+    display: flex;
+    flex-direction: column;
+}
+
+.map-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    background: var(--color-gray-50);
+    border-bottom: 2px solid var(--color-gray-200);
+    height: 60px;
+    flex-shrink: 0;
+}
+
+.map-header h3 {
+    margin: 0;
+    font-size: var(--font-size-md);
+    color: var(--color-gray-800);
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.update-time {
+    font-size: var(--font-size-xs);
+    color: var(--color-gray-600);
+    font-weight: 500;
+}
+
+.map-placeholder {
+    flex: 1;
+    background: var(--color-gray-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.map-content {
+    text-align: center;
+    padding: var(--spacing-md);
+    width: 100%;
+}
+
+.map-content p {
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-gray-700);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.map-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Строгие карточки экологии */
+.monitoring-card {
+    flex: 0 0 300px;
+    height: 320px;
+    background: var(--color-white);
+    border: 2px solid var(--color-gray-300);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+    display: flex;
+    flex-direction: column;
+}
+
+.monitoring-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.monitoring-card h3 {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-gray-800);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
+}
+
+.monitoring-data {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Управление слайдерами */
+.slider-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+.slider-btn {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slider-btn:hover {
+    background: var(--color-primary-dark);
+    transform: scale(1.1);
+}
+
+.slider-btn:disabled {
+    background: var(--color-gray-400);
+    cursor: not-allowed;
+    transform: scale(1);
+}
+
+.slider-dots {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.slider-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-gray-300);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.slider-dot.active {
+    background: var(--color-primary);
+    transform: scale(1.2);
+}
+
+.slider-dot:hover {
+    background: var(--color-primary-light);
+}
+</style>
+
+<script type="application/json" id="news-data">
+[
+    {% for news in alert_news %}
+    {
+        "id": {{ news.id }},
+        "title": {{ news.title|tojson }},
+        "image": "{{ news.image_url if news.image_url else '/static/images/default-news.jpg' }}"
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+]
+</script>
+
+<script>
+let currentAlertIndex = 0;
+let alertInterval;
+const alertItems = document.querySelectorAll('.alert-item');
+const totalAlerts = alertItems.length;
+
+// Получаем данные новостей из JSON
+const newsDataElement = document.getElementById('news-data');
+const newsData = newsDataElement ? JSON.parse(newsDataElement.textContent) : [];
+
+function setActiveAlert(index) {
+    // Убираем активный класс со всех элементов
+    alertItems.forEach(item => item.classList.remove('active'));
+    
+    // Добавляем активный класс к выбранному элементу
+    if (alertItems[index] && newsData[index]) {
+        alertItems[index].classList.add('active');
+        
+        // Обновляем изображение из новости
+        const alertImage = document.getElementById('current-alert-image');
+        alertImage.src = newsData[index].image;
+        alertImage.alt = newsData[index].title;
+        
+        currentAlertIndex = index;
+    }
+}
+
+function nextAlert() {
+    let newIndex = currentAlertIndex + 1;
+    if (newIndex >= totalAlerts) {
+        newIndex = 0;
+    }
+    setActiveAlert(newIndex);
+}
+
+function startAutoRotation() {
+    alertInterval = setInterval(() => {
+        nextAlert();
+    }, 6000); // переключение каждые 6 секунд
+}
+
+function stopAutoRotation() {
+    if (alertInterval) {
+        clearInterval(alertInterval);
+    }
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    if (totalAlerts > 0) {
+        setActiveAlert(0);
+        
+        // Запускаем автопереключение только если есть больше одного предупреждения
+        if (totalAlerts > 1) {
+            startAutoRotation();
+        }
+        
+        // Останавливаем автопереключение при наведении мыши на контейнер
+        const alertsContainer = document.querySelector('.alerts-container');
+        if (alertsContainer) {
+            alertsContainer.addEventListener('mouseenter', stopAutoRotation);
+            alertsContainer.addEventListener('mouseleave', () => {
+                if (totalAlerts > 1) {
+                    startAutoRotation();
+                }
+            });
+        }
+        
+        // Добавляем обработчики клика для элементов списка
+        alertItems.forEach((item, index) => {
+            item.addEventListener('click', (e) => {
+                // Если кликнули по ссылке заголовка - не переключаем фото
+                if (e.target.tagName === 'A') {
+                    return;
+                }
+                setActiveAlert(index);
+            });
+        });
+    }
+});
+
+// Обработка ошибок загрузки изображений
+document.getElementById('current-alert-image').addEventListener('error', function() {
+    this.src = '/static/images/default-news.jpg';
+});
+
+// Слайдеры
+let mapsCurrentSlide = 0;
+let ecologyCurrentSlide = 0;
+
+function createSliderDots(containerSelector, dotsSelector, totalSlides, currentSlide, clickHandler) {
+    const dotsContainer = document.querySelector(dotsSelector);
+    if (!dotsContainer) return;
+    
+    dotsContainer.innerHTML = '';
+    for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('span');
+        dot.className = `slider-dot ${i === currentSlide ? 'active' : ''}`;
+        dot.addEventListener('click', () => clickHandler(i));
+        dotsContainer.appendChild(dot);
+    }
+}
+
+function updateSliderDots(dotsSelector, currentSlide) {
+    const dots = document.querySelectorAll(`${dotsSelector} .slider-dot`);
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+    });
+}
+
+function slideMaps(direction) {
+    const slider = document.querySelector('.maps-slider');
+    const cards = slider.querySelectorAll('.map-card');
+    const totalSlides = Math.max(0, cards.length - 2); // Показываем по 3 карточки
+    
+    if (direction === 'goto') {
+        mapsCurrentSlide = arguments[1];
+    } else {
+        mapsCurrentSlide += direction;
+    }
+    
+    if (mapsCurrentSlide < 0) mapsCurrentSlide = totalSlides;
+    if (mapsCurrentSlide > totalSlides) mapsCurrentSlide = 0;
+    
+    const cardWidth = 350 + 24; // ширина карточки + gap
+    slider.scrollTo({
+        left: mapsCurrentSlide * cardWidth,
+        behavior: 'smooth'
+    });
+    
+    updateSliderDots('.maps-dots', mapsCurrentSlide);
+    
+    // Обновляем кнопки
+    const prevBtn = document.querySelector('.maps-slider-container .prev');
+    const nextBtn = document.querySelector('.maps-slider-container .next');
+    if (prevBtn) prevBtn.disabled = mapsCurrentSlide === 0;
+    if (nextBtn) nextBtn.disabled = mapsCurrentSlide === totalSlides;
+}
+
+function slideEcology(direction) {
+    const slider = document.querySelector('.ecology-slider');
+    const cards = slider.querySelectorAll('.monitoring-card');
+    const totalSlides = Math.max(0, cards.length - 3); // Показываем по 4 карточки
+    
+    if (direction === 'goto') {
+        ecologyCurrentSlide = arguments[1];
+    } else {
+        ecologyCurrentSlide += direction;
+    }
+    
+    if (ecologyCurrentSlide < 0) ecologyCurrentSlide = totalSlides;
+    if (ecologyCurrentSlide > totalSlides) ecologyCurrentSlide = 0;
+    
+    const cardWidth = 300 + 24; // ширина карточки + gap
+    slider.scrollTo({
+        left: ecologyCurrentSlide * cardWidth,
+        behavior: 'smooth'
+    });
+    
+    updateSliderDots('.ecology-dots', ecologyCurrentSlide);
+    
+    // Обновляем кнопки
+    const prevBtn = document.querySelector('.ecology-slider-container .prev');
+    const nextBtn = document.querySelector('.ecology-slider-container .next');
+    if (prevBtn) prevBtn.disabled = ecologyCurrentSlide === 0;
+    if (nextBtn) nextBtn.disabled = ecologyCurrentSlide === totalSlides;
+}
+
+// Инициализация слайдеров
+document.addEventListener('DOMContentLoaded', function() {
+    // Инициализация слайдера карт
+    const mapsSlider = document.querySelector('.maps-slider');
+    if (mapsSlider) {
+        const mapsCards = mapsSlider.querySelectorAll('.map-card');
+        const mapsTotalDots = Math.max(1, mapsCards.length - 2);
+        createSliderDots('.maps-slider-container', '.maps-dots', mapsTotalDots, 0, (index) => slideMaps('goto', index));
+        slideMaps(0); // Инициализация
+    }
+    
+    // Инициализация слайдера экологии
+    const ecologySlider = document.querySelector('.ecology-slider');
+    if (ecologySlider) {
+        const ecologyCards = ecologySlider.querySelectorAll('.monitoring-card');
+        const ecologyTotalDots = Math.max(1, ecologyCards.length - 3);
+        createSliderDots('.ecology-slider-container', '.ecology-dots', ecologyTotalDots, 0, (index) => slideEcology('goto', index));
+        slideEcology(0); // Инициализация
+    }
+});
+</script>
+{% endblock %} 

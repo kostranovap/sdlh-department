@@ -1,0 +1,587 @@
+{% extends "base.html" %}
+
+{% block title %}Личный кабинет - Департамент лесного хозяйства{% endblock %}
+
+{% block meta_description %}Личный кабинет пользователя Департамента лесного хозяйства. Просмотр заявок, управление профилем, уведомления.{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item">Личный кабинет</li>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-container">
+        <!-- Информация о пользователе -->
+        <div class="profile-header">
+            <div class="profile-info">
+                <h1 class="profile-title">Личный кабинет</h1>
+                <div class="user-details">
+                    <div class="user-avatar">
+                        <span class="avatar-icon">👤</span>
+                    </div>
+                    <div class="user-info">
+                        <h2 class="user-name">{{ current_user.full_name }}</h2>
+                        <p class="user-email">{{ current_user.email }}</p>
+                        <span class="user-role">
+                            {% if current_user.role == 'admin' %}
+                                Администратор
+                            {% elif current_user.role == 'user' %}
+                                Пользователь
+                            {% else %}
+                                Гость
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                {% if current_user.role == 'admin' %}
+                    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-primary">Админ-панель</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Уведомления -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="alert alert-info">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Основной контент -->
+        <div class="profile-content">
+            <div class="profile-main">
+                <!-- Мои заявки -->
+                <section class="profile-section">
+                    <h3>Мои заявления</h3>
+                    {% if user_applications %}
+                    <div class="applications-list">
+                        {% for application in user_applications %}
+                        <div class="application-item">
+                            <div class="application-header">
+                                <span class="application-id">Заявление #{{ application.id }}</span>
+                                <span class="application-status status-{{ application.status }}">
+                                    {% if application.status == 'new' %}
+                                        Новое
+                                    {% elif application.status == 'in_progress' %}
+                                        В обработке
+                                    {% elif application.status == 'approved' %}
+                                        Одобрено
+                                    {% elif application.status == 'rejected' %}
+                                        Отклонено
+                                    {% endif %}
+                                </span>
+                            </div>
+                            
+                            <div class="application-info">
+                                <div class="application-type">
+                                    {% if application.application_type == 'service' %}
+                                        <span class="type-badge service">Услуга</span>
+                                        {% if application.service %}
+                                        <span class="service-name">{{ application.service.name }}</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="type-badge program">Программа</span>
+                                        {% if application.program %}
+                                        <span class="service-name">{{ application.program.name }}</span>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="application-dates">
+                                    <span class="date">Подано: {{ application.created_at.strftime('%d.%m.%Y в %H:%M') }}</span>
+                                    {% if application.processed_at %}
+                                    <span class="date">Обработано: {{ application.processed_at.strftime('%d.%m.%Y в %H:%M') }}</span>
+                                    {% endif %}
+                                </div>
+                                
+                                {% if application.admin_comment %}
+                                <div class="admin-comment">
+                                    <strong>Комментарий администратора:</strong>
+                                    <p>{{ application.admin_comment }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="profile-actions">
+                        <a href="{{ url_for('main.info') }}" class="btn btn-primary">
+                            Подать новое заявление
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <p>У вас пока нет поданных заявлений</p>
+                        <a href="{{ url_for('main.info') }}" class="btn btn-primary">
+                            Подать заявление
+                        </a>
+                    </div>
+                    {% endif %}
+                </section>
+            </div>
+
+            <!-- Боковая панель -->
+            <div class="profile-sidebar">
+                <div class="sidebar-card">
+                    <h4>Информация об аккаунте</h4>
+                    <div class="account-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Дата регистрации:</span>
+                            <span class="stat-value">{{ current_user.created_at.strftime('%d.%m.%Y') }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Всего заявок:</span>
+                            <span class="stat-value">{{ applications|length }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Статус аккаунта:</span>
+                            <span class="stat-value verified">Активный</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-card">
+                    <h4>Контакты поддержки</h4>
+                    <div class="support-contacts">
+                        <div class="contact-item">
+                            <strong>Телефон:</strong>
+                            <a href="tel:+74951234567">+7 (495) 123-45-67</a>
+                        </div>
+                        <div class="contact-item">
+                            <strong>Email:</strong>
+                            <a href="mailto:support@dlh.gov.ru">support@dlh.gov.ru</a>
+                        </div>
+                        <div class="contact-item">
+                            <strong>Время работы:</strong>
+                            <span>Пн-Пт: 9:00-18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Компактные стили для личного кабинета */
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-gray-800);
+    margin-bottom: 1rem;
+}
+
+.user-details {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.user-avatar {
+    width: 60px;
+    height: 60px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-icon {
+    font-size: 2rem;
+    color: var(--color-white);
+}
+
+.user-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-gray-800);
+    margin-bottom: 0.5rem;
+}
+
+.user-email {
+    color: var(--color-gray-600);
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+
+.user-role {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.profile-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
+.profile-section {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.profile-section h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-gray-800);
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: 0.5rem;
+}
+
+.applications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.application-item {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: 8px;
+    padding: 1.25rem;
+    transition: all 0.2s ease;
+}
+
+.application-item:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.application-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.application-id {
+    font-weight: 600;
+    color: var(--color-gray-800);
+    font-size: 1rem;
+}
+
+.application-status {
+    padding: 0.375rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-new {
+    background: var(--color-gray-100);
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-300);
+}
+
+.status-in_progress {
+    background: var(--color-gray-100);
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-300);
+}
+
+.status-approved {
+    background: var(--color-gray-100);
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-300);
+}
+
+.status-rejected {
+    background: var(--color-gray-100);
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-300);
+}
+
+.application-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.application-type {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.type-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.type-badge.service {
+    background: var(--color-gray-100);
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-300);
+}
+
+.type-badge.program {
+    background: var(--color-gray-100);
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-300);
+}
+
+.service-name {
+    font-weight: 500;
+    color: var(--color-gray-700);
+    font-size: 0.9rem;
+}
+
+.application-dates {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.date {
+    font-size: 0.85rem;
+    color: var(--color-gray-500);
+}
+
+.admin-comment {
+    background: var(--color-yellow-50);
+    border-left: 3px solid var(--color-yellow-500);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-top: 0.75rem;
+}
+
+.admin-comment strong {
+    color: var(--color-gray-800);
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.admin-comment p {
+    margin: 0;
+    color: var(--color-gray-700);
+    line-height: 1.5;
+    font-size: 0.9rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2.5rem 2rem;
+    color: var(--color-gray-500);
+}
+
+.empty-state p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+.sidebar-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.sidebar-card h4 {
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.account-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-gray-100);
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    color: var(--color-gray-600);
+    font-size: 0.9rem;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: var(--color-gray-800);
+    font-size: 0.9rem;
+}
+
+.stat-value.verified {
+    color: var(--color-primary);
+}
+
+.support-contacts .contact-item {
+    margin-bottom: 1rem;
+}
+
+.support-contacts strong {
+    display: block;
+    color: var(--color-gray-700);
+    font-size: 0.9rem;
+    margin-bottom: 0.375rem;
+    font-weight: 600;
+}
+
+.support-contacts a,
+.support-contacts span {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.support-contacts a:hover {
+    text-decoration: underline;
+}
+
+.flash-messages {
+    margin-bottom: 1.5rem;
+}
+
+.alert {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.alert-info {
+    background-color: #e1f5fe;
+    border-left: 4px solid #0288d1;
+    color: #01579b;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 1rem;
+    }
+    
+    .profile-header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1.25rem;
+    }
+    
+    .profile-title {
+        font-size: 1.75rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .user-details {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+    }
+    
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .avatar-icon {
+        font-size: 1.75rem;
+    }
+    
+    .profile-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .profile-section {
+        padding: 1.25rem;
+    }
+    
+    .application-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .application-type {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .stat-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.375rem;
+        padding: 0.5rem 0;
+    }
+    
+    .sidebar-card {
+        padding: 1rem;
+    }
+}
+</style>
+
+<script>
+function toggleAppDetails(appId) {
+    const details = document.getElementById('app-details-' + appId);
+    const isVisible = details.style.display !== 'none';
+    
+    if (isVisible) {
+        details.style.display = 'none';
+    } else {
+        details.style.display = 'block';
+    }
+}
+</script>
+{% endblock %} 

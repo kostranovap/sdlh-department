@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}Департамент лесного хозяйства - охрана, защита и воспроизводство лесных ресурсов{% endblock %}">
+    <title>{% block title %}Департамент лесного хозяйства{% endblock %}</title>
+    
+    <!-- Официальные стили -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=202501051300">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}?v=202501051300">
+    
+    <!-- Стили для версии слабовидящих (ГОСТ Р 52872-2012) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/accessibility.css') }}?v=202501051300" id="accessibility-style" disabled>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    
+    {% block additional_head %}{% endblock %}
+</head>
+<body>
+    <!-- Версия для слабовидящих по ГОСТ Р 52872-2012 -->
+    <div class="accessibility-panel" id="accessibility-panel" style="display: none;" role="region" aria-label="Настройки доступности">
+        <div class="container">
+            <div class="accessibility-controls">
+                <!-- Переключение режима доступности -->
+                <button class="btn-accessibility" 
+                        id="toggle-accessibility"
+                        type="button"
+                        aria-pressed="false"
+                        aria-label="Переключить режим для слабовидящих">
+                    <span class="normal-text">🔍 Версия для слабовидящих</span>
+                    <span class="accessibility-text" style="display: none;">👁 Обычная версия</span>
+                </button>
+                
+                <!-- Настройки доступности (показываются только в режиме доступности) -->
+                <div id="accessibility-settings" style="display: none;">
+                    <!-- Размер шрифта -->
+                    <div class="settings-group">
+                        <span class="settings-label">Размер шрифта:</span>
+                        <button class="font-control active" 
+                                data-size="normal" 
+                                type="button"
+                                aria-pressed="true"
+                                aria-label="Обычный размер шрифта">А</button>
+                        <button class="font-control" 
+                                data-size="large" 
+                                type="button"
+                                aria-pressed="false"
+                                aria-label="Крупный размер шрифта">А+</button>
+                        <button class="font-control" 
+                                data-size="extra-large" 
+                                type="button"
+                                aria-pressed="false"
+                                aria-label="Очень крупный размер шрифта">А++</button>
+                    </div>
+                    
+                    <!-- Цветовая схема -->
+                    <div class="settings-group">
+                        <span class="settings-label">Цвета:</span>
+                        <button class="color-control active" 
+                                data-scheme="yellow-black" 
+                                type="button"
+                                aria-pressed="true"
+                                aria-label="Желтый фон, черный текст"
+                                title="Стандарт ГОСТ">Ж/Ч</button>
+                        <button class="color-control" 
+                                data-scheme="white-black" 
+                                type="button"
+                                aria-pressed="false"
+                                aria-label="Белый фон, черный текст">Б/Ч</button>
+                        <button class="color-control" 
+                                data-scheme="black-white" 
+                                type="button"
+                                aria-pressed="false"
+                                aria-label="Черный фон, белый текст">Ч/Б</button>
+                    </div>
+                    
+                    <!-- Дополнительные настройки -->
+                    <div class="settings-group">
+                        <span class="settings-label">Настройки:</span>
+                        <button class="option-control" 
+                                data-option="images" 
+                                type="button"
+                                aria-pressed="true"
+                                aria-label="Показывать изображения">🖼️</button>
+                        <button class="option-control" 
+                                data-option="line-height" 
+                                type="button"
+                                aria-pressed="false"
+                                aria-label="Увеличенный межстрочный интервал">📏</button>
+                    </div>
+                </div>
+                
+                <!-- Кнопка закрытия панели -->
+                <button class="btn-close" 
+                        id="close-accessibility-panel"
+                        type="button"
+                        aria-label="Закрыть панель доступности">&times;</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Скрытая область для объявлений для скринридеров -->
+    <div id="accessibility-status" 
+         class="sr-only" 
+         aria-live="polite" 
+         aria-atomic="true"></div>
+
+    <!-- Шапка сайта -->
+    <header class="header">
+        <!-- Верхняя полоса с кнопкой доступности -->
+        <div class="header-top">
+            <div class="container">
+                <div class="header-top-content">
+                    <div class="header-top-left"></div>
+                    <div class="header-top-right">
+                        <button class="btn-accessibility-toggle" 
+                                id="open-accessibility-panel"
+                                type="button"
+                                aria-label="Открыть настройки доступности"
+                                accesskey="a">
+                            👁 Версия для слабовидящих (Alt+A)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Основная белая полоса -->
+        <div class="header-main">
+            <div class="container">
+                <div class="header-main-content">
+                    <div class="header-logo">
+                        <a href="{{ url_for('main.index') }}">
+                            <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Герб России">
+                            <div class="logo-text">
+                                <span class="logo-title">Департамент лесного хозяйства</span>
+                                <span class="logo-subtitle">Российская Федерация</span>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="header-right">
+                        <div class="header-search">
+                            <div class="search-container">
+                                <input type="text" 
+                                       id="searchInput"
+                                       placeholder="Поиск по сайту..." 
+                                       class="search-input"
+                                       autocomplete="off">
+                                <button type="button" class="search-btn" onclick="focusSearch()">
+                                    🔍
+                                </button>
+                                <div id="searchResults" class="search-dropdown"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="header-auth">
+                            {% if current_user.is_authenticated %}
+                                <a href="{{ url_for('auth.profile') }}" class="btn-auth">Профиль</a>
+                                {% if current_user.role == 'admin' %}
+                                    <a href="{{ url_for('admin.dashboard') }}" class="btn-auth">Админ</a>
+                                {% endif %}
+                                <a href="{{ url_for('auth.logout') }}" class="btn-auth">Выход</a>
+                            {% else %}
+                                <a href="#" onclick="openAuthModal('login'); return false;" class="btn-auth">Вход</a>
+                                <a href="#" onclick="openAuthModal('register'); return false;" class="btn-auth">Регистрация</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Навигация -->
+        <nav class="header-nav">
+            <div class="container">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.index') }}" 
+                           class="nav-link {% if request.endpoint == 'main.index' %}active{% endif %}">
+                            Главная
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.about') }}" 
+                           class="nav-link {% if request.endpoint == 'main.about' %}active{% endif %}">
+                            О департаменте
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.info') }}" 
+                           class="nav-link {% if request.endpoint == 'main.info' %}active{% endif %}">
+                            Подача заявлений
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.monitoring') }}" 
+                           class="nav-link {% if request.endpoint == 'main.monitoring' %}active{% endif %}">
+                            Мониторинг
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.news') }}" 
+                           class="nav-link {% if request.endpoint == 'main.news' %}active{% endif %}">
+                            Новости
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- Мобильное меню -->
+                <button class="nav-toggle" id="nav-toggle" onclick="toggleMobileNav()" aria-label="Открыть меню" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="main-content" role="main">
+        <!-- Хлебные крошки -->
+        {% block breadcrumbs %}
+        {% if request.endpoint != 'main.index' %}
+        <div class="breadcrumbs">
+            <div class="container">
+                <nav aria-label="Навигация по сайту">
+                    <ol class="breadcrumb-list">
+                        <li class="breadcrumb-item">
+                            <a href="{{ url_for('main.index') }}">Главная</a>
+                        </li>
+                        {% block breadcrumb_items %}{% endblock %}
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+        {% endblock %}
+
+        <!-- Контент страницы -->
+        <div class="page-content">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Компактный подвал сайта -->
+    <footer class="footer">
+        <div class="footer-main">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4 class="footer-title">О департаменте</h4>
+                        <ul class="footer-links">
+                            <li><a href="{{ url_for('main.about') }}">О нас</a></li>
+                            <li><a href="{{ url_for('main.about') }}#leadership">Руководство</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4 class="footer-title">Услуги</h4>
+                        <ul class="footer-links">
+                            <li><a href="{{ url_for('main.info') }}">Подача заявлений</a></li>
+                            <li><a href="{{ url_for('main.monitoring') }}">Мониторинг лесов</a></li>
+                            <li><a href="{{ url_for('main.news') }}">Новости</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4 class="footer-title">Информация</h4>
+                        <ul class="footer-links">
+                            <li><a href="{{ url_for('main.sitemap') }}">Карта сайта</a></li>
+                            <li><a href="{{ url_for('main.about') }}#documents">Документы</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section footer-contacts">
+                        <h4 class="footer-title">Контакты</h4>
+                        <div class="contact-info">
+                            <p><strong>info@dlh.gov.ru</strong></p>
+                            <p>г. Москва, ул. Лесная, д. 1</p>
+                            <p>+7 (495) 123-45-67</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <p class="copyright">
+                        © 2025 Департамент лесного хозяйства. Все права защищены.
+                    </p>
+                    <div class="footer-links-bottom">
+                        <a href="{{ url_for('main.about') }}">Политика конфиденциальности</a>
+                        <a href="{{ url_for('main.sitemap') }}">Карта сайта</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Кнопка "Наверх" -->
+    <button class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()">
+        <i class="icon-arrow-up"></i>
+    </button>
+
+    <!-- Модальное окно авторизации -->
+    <div id="authModal" class="auth-modal">
+        <div class="auth-modal-content">
+            <div class="auth-modal-header">
+                <h3 id="modalTitle">Вход в систему</h3>
+                <button type="button" class="auth-modal-close" onclick="closeAuthModal()">&times;</button>
+            </div>
+            
+            <div id="authMessage" class="auth-message" style="display: none;"></div>
+            
+            <!-- Форма входа -->
+            <form id="loginForm" class="auth-form" style="display: block;">
+                <div class="form-group">
+                    <label for="loginUsername">Логин или Email:</label>
+                    <input type="text" id="loginUsername" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль:</label>
+                    <input type="password" id="loginPassword" name="password" required>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="loginRemember" name="remember">
+                    <label for="loginRemember">Запомнить меня</label>
+                </div>
+                <button type="submit" class="btn-modal-submit">Войти</button>
+            </form>
+            
+            <!-- Форма регистрации -->
+            <form id="registerForm" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="registerUsername">Логин:</label>
+                    <input type="text" id="registerUsername" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email:</label>
+                    <input type="email" id="registerEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Пароль:</label>
+                    <input type="password" id="registerPassword" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Подтвердите пароль:</label>
+                    <input type="password" id="registerConfirmPassword" name="confirm_password" required>
+                </div>
+                <button type="submit" class="btn-modal-submit">Зарегистрироваться</button>
+            </form>
+            
+            <!-- Переключатели форм -->
+            <div class="auth-modal-footer">
+                <p id="switchToRegister" style="display: block;">
+                    Нет аккаунта? <a href="#" onclick="switchAuthForm('register')">Зарегистрироваться</a>
+                </p>
+                <p id="switchToLogin" style="display: none;">
+                    Уже есть аккаунт? <a href="#" onclick="switchAuthForm('login')">Войти</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Скрипты -->
+    <script src="{{ url_for('static', filename='js/main.js') }}?v=202501051300"></script>
+    <!-- Скрипт доступности (ГОСТ Р 52872-2012) -->
+    <script src="{{ url_for('static', filename='js/accessibility.js') }}?v=202501051300"></script>
+    
+    <!-- Временный скрипт для отладки доступности -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM загружен, проверяем доступность...');
+        
+        // Проверяем наличие элементов
+        const elements = {
+            panel: document.getElementById('accessibility-panel'),
+            openBtn: document.getElementById('open-accessibility-panel'),
+            closeBtn: document.getElementById('close-accessibility-panel'),
+            toggleBtn: document.getElementById('toggle-accessibility')
+        };
+        
+        console.log('Элементы доступности:', elements);
+        
+        // Если менеджер еще не загружен, добавляем простой обработчик
+        if (!window.accessibilityManager && elements.openBtn) {
+            console.log('Добавляем временный обработчик...');
+            elements.openBtn.addEventListener('click', function() {
+                console.log('Кнопка нажата!');
+                if (elements.panel) {
+                    const isVisible = elements.panel.style.display !== 'none';
+                    elements.panel.style.display = isVisible ? 'none' : 'block';
+                    
+                    if (isVisible) {
+                        document.body.classList.remove('accessibility-panel-open');
+                    } else {
+                        document.body.classList.add('accessibility-panel-open');
+                    }
+                    
+                    console.log('Панель ' + (isVisible ? 'скрыта' : 'показана'));
+                }
+            });
+        }
+    });
+    </script>
+    
+    <!-- Стили и скрипт для выпадающего поиска -->
+    <style>
+    .search-container {
+        position: relative;
+        display: flex;
+        border: 1px solid var(--color-gray-300);
+        border-radius: var(--border-radius-md);
+        background: white;
+    }
+    
+    .search-input {
+        border: none;
+        outline: none;
+        padding: var(--spacing-sm) var(--spacing-md);
+        flex: 1;
+        font-size: var(--font-size-sm);
+        background: transparent;
+        color: var(--color-gray-700);
+    }
+    
+    .search-input::placeholder {
+        color: var(--color-gray-400);
+    }
+    
+    .search-btn {
+        background: var(--color-primary);
+        border: none;
+        padding: var(--spacing-sm) var(--spacing-md);
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        transition: background-color var(--transition-fast);
+        border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+    }
+    
+    .search-btn:hover {
+        background: var(--color-primary-dark);
+    }
+    
+    .search-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid var(--color-gray-200);
+        border-radius: var(--border-radius-md);
+        box-shadow: var(--shadow-lg);
+        max-height: 400px;
+        overflow-y: auto;
+        z-index: 1000;
+        display: none;
+        margin-top: 4px;
+    }
+    
+    .search-result-item {
+        padding: var(--spacing-sm) var(--spacing-md);
+        border-bottom: 1px solid var(--color-gray-100);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        transition: background-color var(--transition-fast);
+    }
+    
+    .search-result-item:hover {
+        background-color: #f0f9f0;
+        border-color: #e8f5e8;
+    }
+    
+    .search-result-item:last-child {
+        border-bottom: none;
+    }
+    
+    .search-result-icon {
+        font-size: 16px;
+        opacity: 0.7;
+    }
+    
+    .search-result-content {
+        flex: 1;
+    }
+    
+    .search-result-title {
+        font-weight: 500;
+        color: var(--color-gray-800);
+        margin-bottom: 2px;
+    }
+    
+    .search-result-type {
+        font-size: var(--font-size-xs);
+        color: var(--color-gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .search-no-results {
+        padding: var(--spacing-md);
+        text-align: center;
+        color: var(--color-gray-500);
+        font-size: var(--font-size-sm);
+    }
+    </style>
+    
+    <script>
+    let searchTimeout;
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    
+    function focusSearch() {
+        searchInput.focus();
+    }
+    
+    searchInput.addEventListener('input', function() {
+        const query = this.value.trim();
+        
+        clearTimeout(searchTimeout);
+        
+        if (query.length < 2) {
+            hideSearchResults();
+            return;
+        }
+        
+        searchTimeout = setTimeout(() => {
+            performSearch(query);
+        }, 300);
+    });
+    
+    searchInput.addEventListener('focus', function() {
+        if (this.value.trim().length >= 2) {
+            showSearchResults();
+        }
+    });
+    
+    searchInput.addEventListener('blur', function() {
+        // Увеличиваем задержку чтобы успел сработать клик
+        setTimeout(() => {
+            hideSearchResults();
+        }, 500);
+    });
+    
+    function performSearch(query) {
+        fetch(`/api/search?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(results => {
+                displaySearchResults(results);
+            })
+            .catch(error => {
+                console.error('Ошибка поиска:', error);
+            });
+    }
+    
+    function displaySearchResults(results) {
+        if (results.length === 0) {
+            searchResults.innerHTML = '<div class="search-no-results">Ничего не найдено</div>';
+        } else {
+            searchResults.innerHTML = results.map(result => `
+                <div class="search-result-item" onmousedown="window.location.href='${result.url}'">
+                    <span class="search-result-icon">${result.icon}</span>
+                    <div class="search-result-content">
+                        <div class="search-result-title">${result.title}</div>
+                        <div class="search-result-type">${result.type}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        showSearchResults();
+    }
+    
+    function showSearchResults() {
+        searchResults.style.display = 'block';
+    }
+    
+    function hideSearchResults() {
+        searchResults.style.display = 'none';
+    }
+    
+    // Закрытие при клике вне поиска
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.search-container')) {
+            hideSearchResults();
+        }
+    });
+    </script>
+    
+    {% block additional_scripts %}{% endblock %}
+</body>
+</html> 

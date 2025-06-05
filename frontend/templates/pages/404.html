@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}Страница не найдена - Департамент лесного хозяйства{% endblock %}
+
+{% block meta_description %}Страница не найдена на сайте Департамента лесного хозяйства.{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item">Ошибка 404</li>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="error-content">
+        <div class="error-visual">
+            <div class="error-code">404</div>
+            <div class="error-icon">🌲</div>
+        </div>
+        
+        <div class="error-message">
+            <h1>Страница не найдена</h1>
+            <p>Запрашиваемая страница не существует или была перемещена</p>
+        </div>
+
+        <!-- Простое действие -->
+        <div class="error-action">
+            <a href="{{ url_for('main.index') }}" class="btn btn-primary btn-lg">
+                На главную страницу
+            </a>
+        </div>
+
+        <!-- Таймер редиректа -->
+        <div class="redirect-info">
+            <p>Через <span id="countdown">10</span> секунд вы будете автоматически перенаправлены на главную страницу</p>
+            <button onclick="cancelRedirect()" class="btn-link">Отменить</button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Компактные стили для страницы 404 */
+.error-content {
+    text-align: center;
+    padding: var(--spacing-xl) 0;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.error-visual {
+    margin-bottom: var(--spacing-lg);
+}
+
+.error-code {
+    font-size: 6rem;
+    font-weight: 900;
+    color: var(--color-gray-200);
+    line-height: 1;
+    margin-bottom: var(--spacing-md);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.error-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+    opacity: 0.7;
+}
+
+.error-message h1 {
+    font-size: var(--font-size-2xl);
+    color: var(--color-gray-800);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 700;
+}
+
+.error-message p {
+    font-size: var(--font-size-base);
+    color: var(--color-gray-600);
+    margin-bottom: var(--spacing-lg);
+}
+
+.error-action {
+    margin-bottom: var(--spacing-lg);
+}
+
+.redirect-info {
+    padding: var(--spacing-md);
+    background: var(--color-gray-50);
+    border-radius: var(--border-radius-md);
+    margin-top: var(--spacing-lg);
+}
+
+.redirect-info p {
+    color: var(--color-gray-600);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+#countdown {
+    font-weight: bold;
+    color: var(--color-primary);
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    padding: 0;
+}
+
+.btn-link:hover {
+    color: var(--color-primary-dark);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .error-code {
+        font-size: 4rem;
+    }
+    
+    .error-message h1 {
+        font-size: var(--font-size-xl);
+    }
+    
+    .error-content {
+        padding: var(--spacing-lg) 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .error-code {
+        font-size: 3rem;
+    }
+    
+    .error-message h1 {
+        font-size: var(--font-size-lg);
+    }
+}
+
+/* Анимация появления */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.error-content {
+    animation: fadeInUp 0.6s ease-out;
+}
+</style>
+
+<script>
+// Автоматическое перенаправление на главную через 10 секунд
+let countdown = 10;
+let redirectTimer;
+let isRedirectCanceled = false;
+
+function startCountdown() {
+    const countdownElement = document.getElementById('countdown');
+    
+    redirectTimer = setInterval(() => {
+        countdown--;
+        if (countdownElement) {
+            countdownElement.textContent = countdown;
+        }
+        
+        if (countdown <= 0 && !isRedirectCanceled) {
+            clearInterval(redirectTimer);
+            window.location.href = "{{ url_for('main.index') }}";
+        }
+    }, 1000);
+}
+
+function cancelRedirect() {
+    isRedirectCanceled = true;
+    clearInterval(redirectTimer);
+    
+    const redirectElement = document.querySelector('.redirect-info');
+    if (redirectElement) {
+        redirectElement.innerHTML = '<p style="color: var(--color-gray-600); font-size: var(--font-size-sm); margin: 0;">Автоматическое перенаправление отменено</p>';
+    }
+}
+
+// Запуск таймера при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    startCountdown();
+});
+</script>
+{% endblock %} 

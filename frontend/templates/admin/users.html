@@ -1,0 +1,358 @@
+{% extends "base.html" %}
+
+{% block title %}Управление пользователями - Админ-панель{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Админ-панель</a></li>
+<li class="breadcrumb-item">Пользователи</li>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="admin-page">
+        <div class="page-header">
+            <h1>Управление пользователями</h1>
+        </div>
+
+        <!-- Форма добавления нового пользователя -->
+        <div class="add-user-form">
+            <h3>Добавить нового пользователя</h3>
+            <form method="POST" class="user-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="username">Логин *</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="full_name">ФИО</label>
+                        <input type="text" id="full_name" name="full_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Пароль *</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Роль</label>
+                        <select id="role" name="role">
+                            <option value="user">Пользователь</option>
+                            <option value="admin">Администратор</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn-add-user">Создать</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% if users.items %}
+        <div class="users-table">
+            <div class="table-header">
+                <span>ID</span>
+                <span>Имя пользователя</span>
+                <span>ФИО</span>
+                <span>Email</span>
+                <span>Роль</span>
+                <span>Дата регистрации</span>
+            </div>
+            
+            {% for user in users.items %}
+            <div class="table-row">
+                <span class="user-id">#{{ user.id }}</span>
+                <span class="user-username">{{ user.username }}</span>
+                <span class="user-fullname">{{ user.full_name }}</span>
+                <span class="user-email">{{ user.email }}</span>
+                <span class="user-role role-{{ user.role }}">{{ user.role }}</span>
+                <span class="user-date">{{ user.created_at.strftime('%d.%m.%Y') }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Пагинация -->
+        {% if users.pages > 1 %}
+        <div class="pagination">
+            {% if users.has_prev %}
+                <a href="{{ url_for('admin.users', page=users.prev_num) }}" 
+                   class="pagination-link">‹ Предыдущая</a>
+            {% endif %}
+            
+            {% for page_num in users.iter_pages() %}
+                {% if page_num %}
+                    {% if page_num != users.page %}
+                        <a href="{{ url_for('admin.users', page=page_num) }}" 
+                           class="pagination-link">{{ page_num }}</a>
+                    {% else %}
+                        <span class="pagination-current">{{ page_num }}</span>
+                    {% endif %}
+                {% else %}
+                    <span class="pagination-ellipsis">…</span>
+                {% endif %}
+            {% endfor %}
+            
+            {% if users.has_next %}
+                <a href="{{ url_for('admin.users', page=users.next_num) }}" 
+                   class="pagination-link">Следующая ›</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <div class="empty-state">
+            <p>Пользователи не найдены</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+/* Админ-страницы: отступы и компоновка */
+.admin-page {
+    margin: var(--spacing-2xl) 0;
+}
+
+.page-header {
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-gray-200);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.page-header h1 {
+    margin: 0;
+    color: var(--color-gray-800);
+}
+
+/* Форма добавления пользователя */
+.add-user-form {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-2xl);
+    box-shadow: var(--shadow-sm);
+}
+
+.add-user-form h3 {
+    margin: 0 0 var(--spacing-lg) 0;
+    color: var(--color-gray-800);
+    font-size: var(--font-size-lg);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--spacing-md);
+    align-items: end;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: var(--spacing-xs);
+    font-weight: 600;
+    color: var(--color-gray-700);
+    font-size: var(--font-size-sm);
+}
+
+.form-group input,
+.form-group select {
+    padding: var(--spacing-sm);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    transition: border-color var(--transition-fast);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(34, 139, 34, 0.1);
+}
+
+.btn-add-user {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: var(--font-size-sm);
+}
+
+.btn-add-user:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Пагинация */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-2xl);
+}
+
+.pagination-link, .pagination-current {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+    min-width: 40px;
+    text-align: center;
+}
+
+.pagination-link {
+    background: var(--color-white);
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-200);
+}
+
+.pagination-link:hover {
+    background: var(--color-primary);
+    color: var(--color-white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.pagination-current {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.pagination-ellipsis {
+    color: var(--color-gray-400);
+    padding: var(--spacing-sm);
+}
+
+.users-table {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.table-header {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr 1fr auto auto;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--color-gray-50);
+    font-weight: 600;
+    color: var(--color-gray-700);
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.table-row {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr 1fr auto auto;
+    gap: var(--spacing-lg);
+    align-items: center;
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-gray-100);
+    transition: background-color var(--transition-fast);
+}
+
+.table-row:last-child {
+    border-bottom: none;
+}
+
+.table-row:hover {
+    background: var(--color-gray-50);
+}
+
+.user-id {
+    font-weight: 600;
+    color: var(--color-gray-500);
+}
+
+.user-username {
+    font-weight: 500;
+    color: var(--color-gray-800);
+}
+
+.user-fullname {
+    color: var(--color-gray-700);
+}
+
+.user-email {
+    color: var(--color-gray-600);
+    font-size: var(--font-size-sm);
+}
+
+.user-role {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    text-align: center;
+}
+
+.role-admin {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.role-user {
+    background: #e8f5e8;
+    color: var(--color-primary);
+}
+
+.user-date {
+    color: var(--color-gray-500);
+    font-size: var(--font-size-sm);
+}
+
+@media (max-width: 768px) {
+    .table-header,
+    .table-row {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+    
+    .table-header {
+        display: none;
+    }
+    
+    .table-row {
+        display: block;
+        padding: var(--spacing-lg);
+    }
+    
+    .table-row > span {
+        display: block;
+        margin-bottom: var(--spacing-xs);
+    }
+    
+    .user-id::before { content: "ID: "; font-weight: 600; }
+    .user-username::before { content: "Логин: "; font-weight: 600; }
+    .user-fullname::before { content: "ФИО: "; font-weight: 600; }
+    .user-email::before { content: "Email: "; font-weight: 600; }
+    .user-role::before { content: "Роль: "; font-weight: 600; }
+    .user-date::before { content: "Регистрация: "; font-weight: 600; }
+    
+    /* Адаптивность формы для мобильных */
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+    
+    .add-user-form {
+        padding: var(--spacing-lg);
+    }
+}
+</style>
+{% endblock %} 

@@ -1,0 +1,466 @@
+{% extends "base.html" %}
+
+{% block title %}Новости - Департамент лесного хозяйства{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item active">Новости</li>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Заголовок страницы -->
+    <div class="page-header">
+        <h1 class="page-title">Новости департамента</h1>
+        <div class="page-subtitle-with-sort">
+            <p class="page-subtitle">Актуальная информация о деятельности департамента лесного хозяйства</p>
+            <div class="sort-controls">
+                <label for="sort-select" class="sort-label">Сортировка:</label>
+                <select id="sort-select" class="sort-select" onchange="changeSort(this.value)">
+                    <option value="new" {% if current_sort == 'new' %}selected{% endif %}>Сначала новые</option>
+                    <option value="old" {% if current_sort == 'old' %}selected{% endif %}>Сначала старые</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Список новостей -->
+    <div class="news-grid">
+        {% for news in news_items.items %}
+        <article class="news-card">
+            {% if news.image_url %}
+            <div class="news-image">
+                <img src="{{ news.image_url }}" alt="{{ news.title }}">
+                {% if news.is_important %}
+                    <span class="news-badge important">Важно</span>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="news-image-placeholder">
+                <i class="icon-news"></i>
+                {% if news.is_important %}
+                    <span class="news-badge important">Важно</span>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <div class="news-content">
+                <div class="news-meta">
+                    <time datetime="{{ news.created_at.isoformat() }}">
+                        {{ news.created_at.strftime('%d.%m.%Y') }}
+                    </time>
+                    <span class="news-views">{{ news.view_count }} просмотров</span>
+                </div>
+                
+                <h3 class="news-title">
+                    <a href="{{ url_for('main.news_detail', id=news.id) }}">
+                        {{ news.title }}
+                    </a>
+                </h3>
+                
+                <p class="news-summary">{{ news.content[:200] }}...</p>
+                
+                <div class="news-footer">
+                    <a href="{{ url_for('main.news_detail', id=news.id) }}" class="news-link">
+                        Читать далее →
+                    </a>
+                </div>
+            </div>
+        </article>
+        {% else %}
+        <div class="no-news">
+            <i class="icon-news-empty"></i>
+            <h3>Новостей пока нет</h3>
+            <p>Следите за обновлениями на нашем сайте</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Навигация по страницам (под постами) -->
+    {% if news_items.pages > 1 %}
+    <div class="page-navigation-bottom">
+        {% if news_items.has_prev %}
+            <a href="{{ url_for('main.news', page=news_items.prev_num, sort=current_sort) }}" 
+               class="nav-btn-arrow nav-prev" title="Предыдущая страница">
+                ←
+            </a>
+        {% else %}
+            <span class="nav-btn-arrow nav-prev disabled">←</span>
+        {% endif %}
+        
+        <span class="page-info">{{ news_items.page }} / {{ news_items.pages }}</span>
+        
+        {% if news_items.has_next %}
+            <a href="{{ url_for('main.news', page=news_items.next_num, sort=current_sort) }}" 
+               class="nav-btn-arrow nav-next" title="Следующая страница">
+                →
+            </a>
+        {% else %}
+            <span class="nav-btn-arrow nav-next disabled">→</span>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function changeSort(sortValue) {
+    const url = new URL(window.location);
+    url.searchParams.set('sort', sortValue);
+    url.searchParams.set('page', '1'); // Сбрасываем на первую страницу при смене сортировки
+    window.location.href = url.toString();
+}
+</script>
+
+<style>
+.page-header {
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+}
+
+.page-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--color-gray-800);
+    margin-bottom: 1rem;
+}
+
+.page-subtitle-with-sort {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.page-subtitle {
+    font-size: 1.125rem;
+    color: var(--color-gray-600);
+    margin: 0;
+    line-height: 1.6;
+    flex: 1;
+}
+
+/* Сортировка */
+.sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.sort-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-gray-700);
+}
+
+.sort-select {
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 6px;
+    background: var(--color-white);
+    color: var(--color-gray-700);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sort-select:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.sort-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(46, 91, 49, 0.1);
+}
+
+.sort-select option:hover,
+.sort-select option:focus {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+/* Контейнер для новостей с одинаковыми карточками */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+    align-items: start;
+}
+
+.news-card {
+    background: var(--color-white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid var(--color-gray-200);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.news-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.news-image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.news-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.news-card:hover .news-image img {
+    transform: scale(1.05);
+}
+
+.news-image-placeholder {
+    position: relative;
+    height: 200px;
+    background: linear-gradient(135deg, var(--color-gray-100), var(--color-gray-200));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-gray-500);
+    font-size: 3rem;
+    flex-shrink: 0;
+}
+
+.news-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--color-secondary);
+    color: var(--color-white);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.news-content {
+    padding: 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.news-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--color-gray-500);
+}
+
+.news-views {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.news-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 0.75rem;
+}
+
+.news-title a {
+    color: var(--color-gray-800);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.news-title a:hover {
+    color: var(--color-primary);
+}
+
+.news-summary {
+    color: var(--color-gray-600);
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.95rem;
+}
+
+.news-footer {
+    margin-top: auto;
+}
+
+.news-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.news-link:hover {
+    color: var(--color-primary-dark);
+}
+
+.no-news {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--color-gray-500);
+}
+
+.no-news i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.no-news h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-gray-700);
+}
+
+/* Навигация под постами */
+.page-navigation-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    background: var(--color-white);
+    padding: 0.75rem 1rem;
+    border-radius: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--color-gray-200);
+    margin: 2rem 0 3rem auto;
+    width: fit-content;
+}
+
+.nav-btn-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: 1px solid var(--color-gray-300);
+    background: var(--color-white);
+    color: var(--color-gray-700);
+}
+
+.nav-btn-arrow:hover:not(.disabled) {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-color: var(--color-primary);
+    transform: scale(1.1);
+}
+
+.nav-btn-arrow.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.page-info {
+    font-size: 0.875rem;
+    color: var(--color-gray-600);
+    font-weight: 500;
+    margin: 0 0.5rem;
+    white-space: nowrap;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .page-subtitle-with-sort {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .sort-controls {
+        align-self: flex-end;
+    }
+    
+    .page-navigation-bottom {
+        margin: 2rem auto 3rem auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .news-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .news-card {
+        border-radius: 8px;
+    }
+    
+    .news-image,
+    .news-image-placeholder {
+        height: 160px;
+    }
+    
+    .news-content {
+        padding: 1rem;
+    }
+    
+    .page-navigation-bottom {
+        padding: 0.5rem 0.75rem;
+        margin: 1.5rem auto 2rem auto;
+    }
+    
+    .nav-btn-arrow {
+        width: 32px;
+        height: 32px;
+        font-size: 0.875rem;
+    }
+    
+    .page-info {
+        font-size: 0.8rem;
+        margin: 0 0.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header {
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    .page-subtitle-with-sort {
+        gap: 0.75rem;
+    }
+    
+    .news-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    
+    .page-navigation-bottom {
+        margin: 1rem auto 2rem auto;
+    }
+}
+</style>
+{% endblock %} 

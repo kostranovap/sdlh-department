@@ -1,0 +1,895 @@
+{% extends "base.html" %}
+
+{% block title %}Главная - Департамент лесного хозяйства{% endblock %}
+
+{% block meta_description %}Официальный сайт Департамента лесного хозяйства. Государственные услуги, мониторинг лесов, экологические программы и новости лесного хозяйства.{% endblock %}
+
+{% block additional_head %}
+<style>
+/* Стили главной страницы */
+.hero-banner {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: var(--color-white);
+    padding: var(--spacing-3xl) 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: url('{{ url_for("static", filename="images/forest-pattern.png") }}');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.hero-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-3xl);
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: var(--font-size-4xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-2xl);
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+.hero-actions {
+    display: flex;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.hero-stats {
+    background: var(--color-secondary);
+    color: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+    display: inline-block;
+    width: 700px;
+    max-width: 485px;
+}
+
+.fire-danger-container {
+    display: flex !important;
+    align-items: center !important;
+    gap: var(--spacing-md) !important;
+}
+
+.hero-stats h4 {
+    margin: 0 !important;
+    font-size: var(--font-size-md);
+    font-weight: 500;
+    color: var(--color-white);
+    white-space: nowrap;
+}
+
+.fire-danger {
+    background: var(--color-white);
+    color: var(--color-secondary);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+    flex-shrink: 0;
+}
+
+/* Изображение карты региона */
+.hero-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.region-map {
+    width: 200%;
+    max-width: none;
+    height: auto;
+    filter: brightness(1.1) contrast(1.1);
+    transition: all var(--transition-base);
+    transform: scale(1.2);
+}
+
+.hero-image:hover .region-map {
+    transform: scale(1.25);
+    filter: brightness(1.2) contrast(1.2);
+}
+
+/* Важные уведомления */
+.notices-section {
+    background: var(--color-secondary);
+    color: var(--color-white);
+    padding: var(--spacing-lg) 0;
+}
+
+.notice-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.notice-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.notice-content h3 {
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-lg);
+}
+
+.notice-link {
+    color: var(--color-white);
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+/* Секции */
+.section {
+    padding: var(--spacing-3xl) 0;
+}
+
+.section-title {
+    font-size: var(--font-size-3xl);
+    font-weight: 600;
+    color: var(--color-gray-800);
+    margin-bottom: var(--spacing-2xl);
+    text-align: center;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-2xl);
+}
+
+/* Статистика - строгий стиль */
+.statistics {
+    background: var(--color-gray-50);
+    border-top: 3px solid var(--color-primary);
+    border-bottom: 3px solid var(--color-primary);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.stat-item {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-lg);
+    text-align: center;
+    box-shadow: none;
+    transition: none;
+    position: relative;
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+    display: block;
+}
+
+.stat-number {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-xs);
+    display: block;
+}
+
+.stat-label {
+    color: var(--color-gray-700);
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stats-actions {
+    text-align: center;
+    border-top: 1px solid var(--color-gray-200);
+    padding-top: var(--spacing-lg);
+}
+
+.stats-actions .btn + .btn {
+    margin-left: var(--spacing-md);
+}
+
+/* Новости */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.news-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.news-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.news-image {
+    aspect-ratio: 16/9;
+    overflow: hidden;
+}
+
+.news-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-base);
+}
+
+.news-card:hover .news-image img {
+    transform: scale(1.05);
+}
+
+.news-content {
+    padding: var(--spacing-lg);
+}
+
+.news-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-500);
+}
+
+.news-category {
+    background: var(--color-primary);
+    color: var(--color-white);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-weight: 500;
+}
+
+.news-title {
+    margin-bottom: var(--spacing-md);
+}
+
+.news-title a {
+    color: var(--color-gray-800);
+    text-decoration: none;
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.news-title a:hover {
+    color: var(--color-primary);
+}
+
+.news-excerpt {
+    color: var(--color-gray-600);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-md);
+}
+
+.news-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.news-link:hover {
+    text-decoration: underline;
+}
+
+.news-link::after {
+    content: '→';
+    transition: transform var(--transition-fast);
+}
+
+.news-link:hover::after {
+    transform: translateX(4px);
+}
+
+/* Контакты и адреса - типографический стиль */
+.contacts-section {
+    background: var(--color-white);
+    border-top: 3px solid var(--color-primary);
+}
+
+.contacts-section .section-title {
+    color: var(--color-gray-800);
+    margin-bottom: var(--spacing-2xl);
+    text-align: left;
+}
+
+.contacts-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2xl);
+}
+
+.contact-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-2xl);
+    box-shadow: var(--shadow-sm);
+}
+
+.contact-sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+}
+
+.contact-section {
+    padding-bottom: var(--spacing-xl);
+}
+
+.contact-section:last-child {
+    padding-bottom: 0;
+}
+
+.contact-section h3 {
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--font-size-xl);
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: var(--spacing-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.contact-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: var(--spacing-xl);
+    align-items: start;
+}
+
+.contact-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-group strong {
+    color: var(--color-gray-800);
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-bottom: 1px solid var(--color-gray-300);
+    padding-bottom: 2px;
+}
+
+.contact-group p {
+    color: var(--color-gray-600);
+    margin: 0;
+    line-height: 1.5;
+    font-size: var(--font-size-sm);
+}
+
+.contact-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.contact-link:hover {
+    text-decoration: underline;
+}
+
+.contact-hours {
+    background: var(--color-gray-50);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    border-left: 4px solid var(--color-primary);
+    min-width: 200px;
+}
+
+.contact-hours strong {
+    color: var(--color-primary);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: var(--spacing-xs);
+}
+
+.contact-hours p {
+    font-size: var(--font-size-sm);
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .contact-content {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    .contact-hours {
+        grid-column: 1 / -1;
+        min-width: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-banner {
+        padding: var(--spacing-2xl) 0;
+    }
+    
+    .hero-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: var(--spacing-lg);
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-2xl);
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .hero-subtitle {
+        font-size: var(--font-size-base);
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .hero-actions {
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-md);
+    }
+    
+    .hero-actions .btn {
+        width: 100%;
+        max-width: 250px;
+    }
+    
+    /* Скрываем карту на мобильных устройствах */
+    .hero-image {
+        display: none;
+    }
+    
+    .hero-stats {
+        max-width: 100%;
+        width: auto;
+        margin-top: var(--spacing-lg);
+    }
+    
+    .fire-danger-container {
+        flex-direction: column !important;
+        text-align: center;
+        gap: var(--spacing-sm) !important;
+    }
+    
+    .fire-danger-container h4 {
+        font-size: var(--font-size-sm);
+        white-space: normal;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        text-align: center;
+    }
+    
+    .stats-actions .btn + .btn {
+        margin-left: 0;
+        margin-top: var(--spacing-md);
+    }
+    
+    .contact-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-banner {
+        padding: var(--spacing-xl) 0;
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-xl);
+    }
+    
+    .hero-subtitle {
+        font-size: var(--font-size-sm);
+    }
+    
+    .hero-actions .btn {
+        font-size: var(--font-size-sm);
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    
+    .hero-stats {
+        padding: var(--spacing-md);
+    }
+    
+    .fire-danger {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+    
+    /* Адаптивность для статистики */
+    .statistics-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: var(--spacing-md);
+        background: var(--color-white);
+        border-radius: var(--border-radius-md);
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .stat-number {
+        font-size: var(--font-size-xl);
+    }
+    
+    .stat-label {
+        font-size: var(--font-size-xs);
+    }
+    
+    /* Адаптивность для новостей */
+    .news-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    .news-card {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .news-content {
+        padding: var(--spacing-md);
+    }
+    
+    .news-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+    
+    .news-title a {
+        font-size: var(--font-size-base);
+    }
+    
+    .news-excerpt {
+        font-size: var(--font-size-sm);
+        line-height: 1.5;
+    }
+    
+    /* Адаптивность для контактов */
+    .contact-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .contact-group {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .contact-hours {
+        background: var(--color-gray-50);
+        padding: var(--spacing-sm);
+        border-radius: var(--border-radius-sm);
+        margin-top: var(--spacing-md);
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Главный баннер -->
+<section class="hero-banner" role="banner" id="about">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">Департамент лесного хозяйства</h1>
+                <p class="hero-subtitle">Сохраняем и приумножаем лесные богатства России для будущих поколений</p>
+                
+                <div class="hero-actions" id="services">
+                    <a href="{{ url_for('main.info') }}" class="btn btn-primary btn-lg">
+                        Подача заявлений
+                    </a>
+                    <a href="{{ url_for('main.monitoring') }}" class="btn btn-outline btn-lg">
+                        Мониторинг лесов
+                    </a>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="fire-danger-container">
+                        <h4>Текущий класс пожарной опасности:</h4>
+                        <div class="fire-danger">{{ fire_danger_class or 'II (умеренная)' }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-image">
+                <img src="{{ url_for('static', filename='images/Gemini_Generated_Image_4kcahf4kcahf4kca-removebg-preview.png') }}" 
+                     alt="Карта лесных территорий региона" 
+                     class="region-map">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Важные уведомления -->
+{% if important_notices %}
+<section class="notices-section" aria-label="Важные уведомления">
+    <div class="container">
+        {% for notice in important_notices %}
+        <div class="notice-item">
+            <div class="notice-icon" aria-hidden="true">📢</div>
+            <div class="notice-content">
+                <h3>{{ notice.title }}</h3>
+                <p>{{ notice.content }}</p>
+                {% if notice.link %}
+                <a href="{{ notice.link }}" class="notice-link">Подробнее</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Статистика -->
+<section class="statistics section" id="monitoring">
+    <div class="container">
+        <h2 class="section-title">Состояние лесов в цифрах</h2>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-icon">▲</span>
+                <span class="stat-number">{{ forest_stats.total_area or '2.3 млн' }}</span>
+                <div class="stat-label">гектаров под охраной департамента</div>
+            </div>
+            
+            <div class="stat-item">
+                <span class="stat-icon">■</span>
+                <span class="stat-number">{{ forest_stats.protected_areas or '156' }}</span>
+                <div class="stat-label">особо охраняемых природных территорий</div>
+            </div>
+            
+            <div class="stat-item">
+                <span class="stat-icon">●</span>
+                <span class="stat-number">{{ forest_stats.reforested or '45.2 тыс' }}</span>
+                <div class="stat-label">гектаров восстановлено в 2024 году</div>
+            </div>
+            
+            <div class="stat-item">
+                <span class="stat-icon">◆</span>
+                <span class="stat-number">{{ forest_stats.fires_prevented or '98.5%' }}</span>
+                <div class="stat-label">лесных пожаров предотвращено</div>
+            </div>
+        </div>
+        
+        <div class="stats-actions">
+            <a href="{{ url_for('main.monitoring') }}" class="btn btn-primary btn-lg">Подробная статистика</a>
+            <a href="{{ url_for('main.info') }}" class="btn btn-outline btn-lg">Подача заявлений</a>
+        </div>
+    </div>
+</section>
+
+<!-- Последние новости -->
+<section class="section" id="news">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Последние новости</h2>
+            <a href="{{ url_for('main.news') }}" class="btn btn-outline">Все новости</a>
+        </div>
+        
+        <div class="news-grid">
+            {% for article in latest_news[:6] %}
+            <article class="news-card">
+                {% if article.image_url %}
+                <div class="news-image">
+                    <img src="{{ article.image_url }}" 
+                         alt="{{ article.title }}" 
+                         loading="lazy">
+                </div>
+                {% endif %}
+                
+                <div class="news-content">
+                    <div class="news-meta">
+                        <time datetime="{{ article.created_at.isoformat() if article.created_at else '' }}">
+                            {{ article.created_at.strftime('%d.%m.%Y') if article.created_at else '01.01.2025' }}
+                        </time>
+                        <span class="news-category">{{ article.category or 'Новости' }}</span>
+                    </div>
+                    
+                    <h3 class="news-title">
+                        <a href="{{ url_for('main.news_detail', id=article.id) if article.id else '#' }}">
+                            {{ article.title }}
+                        </a>
+                    </h3>
+                    
+                    <p class="news-excerpt">
+                        {{ (article.excerpt or article.content)[:150] if article.content else 'Краткое описание новости...' }}...
+                    </p>
+                    
+                    <a href="{{ url_for('main.news_detail', id=article.id) if article.id else '#' }}" 
+                       class="news-link">Читать далее</a>
+                </div>
+            </article>
+            {% else %}
+            <!-- Заглушки новостей -->
+            <article class="news-card">
+                <div class="news-content">
+                    <div class="news-meta">
+                        <time datetime="2025-01-03">03.01.2025</time>
+                        <span class="news-category">Объявления</span>
+                    </div>
+                    <h3 class="news-title">
+                        <a href="#">Запуск нового официального сайта департамента</a>
+                    </h3>
+                    <p class="news-excerpt">Департамент лесного хозяйства представляет обновленный сайт с улучшенным функционалом и версией для слабовидящих.</p>
+                    <a href="#" class="news-link">Читать далее</a>
+                </div>
+            </article>
+            
+            <article class="news-card">
+                <div class="news-content">
+                    <div class="news-meta">
+                        <time datetime="2025-01-02">02.01.2025</time>
+                        <span class="news-category">Программы</span>
+                    </div>
+                    <h3 class="news-title">
+                        <a href="#">Программа лесовосстановления на 2025 год</a>
+                    </h3>
+                    <p class="news-excerpt">Утверждена региональная программа посадки и восстановления лесных массивов на площади 50 тысяч гектаров в этом году.</p>
+                    <a href="#" class="news-link">Читать далее</a>
+                </div>
+            </article>
+            
+            <article class="news-card">
+                <div class="news-content">
+                    <div class="news-meta">
+                        <time datetime="2025-01-01">01.01.2025</time>
+                        <span class="news-category">Технологии</span>
+                    </div>
+                    <h3 class="news-title">
+                        <a href="#">Внедрение системы космического мониторинга лесов</a>
+                    </h3>
+                    <p class="news-excerpt">В департаменте начато использование спутниковых технологий для контроля состояния лесных ресурсов в режиме реального времени.</p>
+                    <a href="#" class="news-link">Читать далее</a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Справочная информация -->
+<section class="contacts-section section" id="leadership">
+    <div class="container">
+        <h2 class="section-title">Справочная информация</h2>
+        <div class="contacts-grid">
+            <div class="contact-card">
+                <div class="contact-sections">
+                    <div class="contact-section">
+                        <h3>Центральный аппарат департамента</h3>
+                        <div class="contact-content">
+                            <div class="contact-group">
+                                <strong>Почтовый адрес</strong>
+                                <p>125009, г. Москва,<br>ул. Лесная, д. 15, стр. 1<br>Департамент лесного хозяйства</p>
+                            </div>
+                            <div class="contact-group">
+                                <strong>Телефон / Факс</strong>
+                                <p>Приёмная: <a href="tel:+74951234567" class="contact-link">+7 (495) 123-45-67</a><br>
+                                Факс: +7 (495) 123-45-68<br>
+                                Горячая линия: <a href="tel:+78001234567" class="contact-link">8-800-123-45-67</a></p>
+                            </div>
+                            <div class="contact-group">
+                                <strong>Электронная почта</strong>
+                                <p>Общие вопросы:<br><a href="mailto:info@dlh.gov.ru" class="contact-link">info@dlh.gov.ru</a><br>
+                                Пресс-служба:<br><a href="mailto:press@dlh.gov.ru" class="contact-link">press@dlh.gov.ru</a></p>
+                            </div>
+                            <div class="contact-hours">
+                                <strong>Режим работы</strong>
+                                <p>Понедельник – Четверг:<br>9:00 – 18:00<br>Пятница: 9:00 – 16:45<br>Обед: 13:00 – 13:45</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-section">
+                        <h3>Экстренные и дежурные службы</h3>
+                        <div class="contact-content">
+                            <div class="contact-group">
+                                <strong>Лесная охрана</strong>
+                                <p>Единый номер:<br><a href="tel:+78007654321" class="contact-link">8-800-765-43-21</a><br>
+                                Дежурный по МО:<br><a href="tel:+74951234570" class="contact-link">+7 (495) 123-45-70</a></p>
+                            </div>
+                            <div class="contact-group">
+                                <strong>Пожарная служба</strong>
+                                <p>Диспетчерская:<br><a href="tel:+74951234568" class="contact-link">+7 (495) 123-45-68</a><br>
+                                Мобильная группа:<br><a href="tel:+79161234567" class="contact-link">+7 (916) 123-45-67</a></p>
+                            </div>
+                            <div class="contact-group">
+                                <strong>Оперативный центр</strong>
+                                <p>Дежурный:<br><a href="tel:+74951234569" class="contact-link">+7 (495) 123-45-69</a><br>
+                                Экстренные ситуации:<br><a href="tel:+7112" class="contact-link">112</a></p>
+                            </div>
+                            <div class="contact-hours">
+                                <strong>Время работы</strong>
+                                <p>Круглосуточно<br>Без выходных<br>и праздничных дней</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-section">
+                        <h3>Территориальные управления</h3>
+                        <div class="contact-content">
+                            <div class="contact-group">
+                                <strong>Северо-Западное</strong>
+                                <p>190000, г. Санкт-Петербург,<br>Невский пр., д. 28<br>
+                                Тел.: <a href="tel:+78123456789" class="contact-link">+7 (812) 345-67-89</a><br>
+                                Email: <a href="mailto:nw@dlh.gov.ru" class="contact-link">nw@dlh.gov.ru</a></p>
+                            </div>
+                            <div class="contact-group">
+                                <strong>Сибирское</strong>
+                                <p>630007, г. Новосибирск,<br>ул. Советская, д. 64<br>
+                                Тел.: <a href="tel:+73833456789" class="contact-link">+7 (383) 345-67-89</a><br>
+                                Email: <a href="mailto:sib@dlh.gov.ru" class="contact-link">sib@dlh.gov.ru</a></p>
+                            </div>
+                            <div class="contact-group">
+                                <strong>Дальневосточное</strong>
+                                <p>680000, г. Хабаровск,<br>ул. Муравьёва-Амурского, д. 15<br>
+                                Тел.: <a href="tel:+74212456789" class="contact-link">+7 (4212) 45-67-89</a><br>
+                                Email: <a href="mailto:dv@dlh.gov.ru" class="contact-link">dv@dlh.gov.ru</a></p>
+                            </div>
+                            <div class="contact-hours">
+                                <strong>Режим работы</strong>
+                                <p>Понедельник – Пятница:<br>9:00 – 17:00<br>Местное время</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 

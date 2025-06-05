@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+
+{% block title %}Заявления - Админ-панель{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Админ-панель</a></li>
+<li class="breadcrumb-item">Заявления</li>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="admin-page">
+        <div class="page-header">
+            <h1>Заявления</h1>
+        </div>
+
+        {% if applications.items %}
+        <div class="applications-table">
+            <div class="table-header">
+                <span>Заявитель</span>
+                <span>Тип</span>
+                <span>Услуга/Программа</span>
+                <span>Статус</span>
+                <span>Дата</span>
+                <span>Действия</span>
+            </div>
+            
+            {% for app in applications.items %}
+            <div class="table-row">
+                <span class="app-user">
+                    <strong>{{ app.full_name }}</strong>
+                    <small>{{ app.email }}</small>
+                </span>
+                <span class="app-type type-{{ app.application_type }}">
+                    {{ 'Услуга' if app.application_type == 'service' else 'Программа' }}
+                </span>
+                <span class="app-service">
+                    {% if app.application_type == 'service' and app.service %}
+                        {{ app.service.name }}
+                    {% elif app.application_type == 'program' and app.program %}
+                        {{ app.program.name }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </span>
+                <span class="app-status status-{{ app.status }}">
+                    {% if app.status == 'new' %}Новое
+                    {% elif app.status == 'in_progress' %}В обработке
+                    {% elif app.status == 'approved' %}Одобрено
+                    {% elif app.status == 'rejected' %}Отклонено
+                    {% endif %}
+                </span>
+                <span class="app-date">{{ app.created_at.strftime('%d.%m.%Y') }}</span>
+                <span class="app-actions">
+                    {% if app.status in ['new', 'in_progress'] %}
+                    <form method="POST" action="{{ url_for('admin.approve_application', id=app.id) }}" style="display: inline;" onsubmit="return confirm('Одобрить?')">
+                        <button type="submit" class="action-btn approve-btn" title="Одобрить">✓</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('admin.reject_application', id=app.id) }}" style="display: inline;" onsubmit="return confirm('Отклонить?')">
+                        <button type="submit" class="action-btn reject-btn" title="Отклонить">✗</button>
+                    </form>
+                    {% else %}
+                    <span class="no-actions">—</span>
+                    {% endif %}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Пагинация -->
+        {% if applications.pages > 1 %}
+        <div class="pagination">
+            {% if applications.has_prev %}
+                <a href="{{ url_for('admin.applications', page=applications.prev_num) }}" 
+                   class="pagination-link">‹ Предыдущая</a>
+            {% endif %}
+            
+            {% for page_num in applications.iter_pages() %}
+                {% if page_num %}
+                    {% if page_num != applications.page %}
+                        <a href="{{ url_for('admin.applications', page=page_num) }}" 
+                           class="pagination-link">{{ page_num }}</a>
+                    {% else %}
+                        <span class="pagination-current">{{ page_num }}</span>
+                    {% endif %}
+                {% else %}
+                    <span class="pagination-ellipsis">…</span>
+                {% endif %}
+            {% endfor %}
+            
+            {% if applications.has_next %}
+                <a href="{{ url_for('admin.applications', page=applications.next_num) }}" 
+                   class="pagination-link">Следующая ›</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <div class="empty-state">
+            <p>Заявления не найдены</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+/* Админ-страницы: отступы и компоновка */
+.admin-page {
+    margin: var(--spacing-2xl) 0;
+}
+
+.page-header {
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-gray-200);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.page-header h1 {
+    margin: 0;
+    color: var(--color-gray-800);
+}
+
+/* Пагинация */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-2xl);
+}
+
+.pagination-link, .pagination-current {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+    min-width: 40px;
+    text-align: center;
+}
+
+.pagination-link {
+    background: var(--color-white);
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-200);
+}
+
+.pagination-link:hover {
+    background: var(--color-primary);
+    color: var(--color-white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.pagination-current {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.pagination-ellipsis {
+    color: var(--color-gray-400);
+    padding: var(--spacing-sm);
+}
+
+.applications-table {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.table-header {
+    display: grid;
+    grid-template-columns: 2fr auto 2fr auto auto auto;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--color-gray-50);
+    font-weight: 600;
+    color: var(--color-gray-700);
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.table-row {
+    display: grid;
+    grid-template-columns: 2fr auto 2fr auto auto auto;
+    gap: var(--spacing-lg);
+    align-items: center;
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-gray-100);
+    transition: background-color var(--transition-fast);
+}
+
+.table-row:last-child {
+    border-bottom: none;
+}
+
+.table-row:hover {
+    background: var(--color-gray-50);
+}
+
+.app-user strong {
+    display: block;
+    color: var(--color-gray-800);
+    font-weight: 600;
+}
+
+.app-user small {
+    display: block;
+    color: var(--color-gray-600);
+    font-size: var(--font-size-xs);
+}
+
+.app-type {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-align: center;
+}
+
+.type-service {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.type-program {
+    background: #e8f5e8;
+    color: var(--color-primary);
+}
+
+.app-service {
+    color: var(--color-gray-700);
+    font-size: var(--font-size-sm);
+}
+
+.app-status {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-align: center;
+}
+
+.status-new {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-in_progress {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.status-approved {
+    background: #e8f5e8;
+    color: var(--color-primary);
+}
+
+.status-rejected {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.app-date {
+    color: var(--color-gray-500);
+    font-size: var(--font-size-sm);
+}
+
+.app-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.action-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.approve-btn {
+    background: #e8f5e8;
+    color: var(--color-primary);
+}
+
+.approve-btn:hover {
+    background: var(--color-primary);
+    color: white;
+}
+
+.reject-btn {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.reject-btn:hover {
+    background: #d32f2f;
+    color: white;
+}
+
+.no-actions {
+    color: var(--color-gray-400);
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .table-header {
+        display: none;
+    }
+    
+    .table-row {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+    
+    .table-row > span {
+        display: block;
+        margin-bottom: var(--spacing-xs);
+    }
+    
+    .app-user::before { content: "Заявитель: "; font-weight: 600; }
+    .app-type::before { content: "Тип: "; font-weight: 600; }
+    .app-service::before { content: "Услуга: "; font-weight: 600; }
+    .app-status::before { content: "Статус: "; font-weight: 600; }
+    .app-date::before { content: "Дата: "; font-weight: 600; }
+}
+</style>
+{% endblock %} 
