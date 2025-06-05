@@ -1,0 +1,244 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Управление услугами и программами{% endblock %}
+
+{% block content %}
+<div class="admin-content">
+    <div class="admin-header">
+        <h1>Услуги и программы</h1>
+        <div class="admin-actions">
+            <a href="{{ url_for('admin.add_service') }}" class="btn btn-primary">
+                <i class="icon-plus"></i> Добавить услугу
+            </a>
+            <a href="{{ url_for('admin.add_program') }}" class="btn btn-success">
+                <i class="icon-plus"></i> Добавить программу
+            </a>
+        </div>
+    </div>
+
+    <!-- Услуги -->
+    <div class="admin-section">
+        <h2>Услуги департамента ({{ services.total }} всего)</h2>
+        
+        {% if services.items %}
+        <div class="admin-table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Название</th>
+                        <th>Описание</th>
+                        <th>Срок обработки</th>
+                        <th>Стоимость</th>
+                        <th>Статус</th>
+                        <th>Дата создания</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in services.items %}
+                    <tr>
+                        <td>{{ service.id }}</td>
+                        <td><strong>{{ service.name }}</strong></td>
+                        <td class="text-truncate">{{ service.description[:100] }}{% if service.description|length > 100 %}...{% endif %}</td>
+                        <td>{{ service.processing_time or 'Не указано' }}</td>
+                        <td>{{ service.cost or 'Не указано' }}</td>
+                        <td>
+                            <span class="status-badge {% if service.is_active %}status-active{% else %}status-inactive{% endif %}">
+                                {% if service.is_active %}Активна{% else %}Неактивна{% endif %}
+                            </span>
+                        </td>
+                        <td>{{ service.created_at.strftime('%d.%m.%Y') if service.created_at else 'Не указано' }}</td>
+                        <td class="actions">
+                            <a href="{{ url_for('admin.edit_service', id=service.id) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="icon-edit"></i> Изменить
+                            </a>
+                            <form method="POST" action="{{ url_for('admin.delete_service', id=service.id) }}" 
+                                  style="display: inline;" 
+                                  onsubmit="return confirm('Вы уверены, что хотите удалить эту услугу?')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="icon-delete"></i> Удалить
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Пагинация для услуг -->
+        {% if services.pages > 1 %}
+        <div class="pagination-container">
+            <nav class="pagination">
+                {% if services.has_prev %}
+                    <a href="{{ url_for('admin.services_programs', page=services.prev_num) }}" class="page-link">
+                        <i class="icon-arrow-left"></i> Предыдущая
+                    </a>
+                {% endif %}
+                
+                {% for page_num in services.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num != services.page %}
+                            <a href="{{ url_for('admin.services_programs', page=page_num) }}" class="page-link">{{ page_num }}</a>
+                        {% else %}
+                            <span class="page-link current">{{ page_num }}</span>
+                        {% endif %}
+                    {% else %}
+                        <span class="page-link disabled">...</span>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if services.has_next %}
+                    <a href="{{ url_for('admin.services_programs', page=services.next_num) }}" class="page-link">
+                        Следующая <i class="icon-arrow-right"></i>
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📋</div>
+            <h3>Услуги не найдены</h3>
+            <p>Пока нет добавленных услуг департамента.</p>
+            <a href="{{ url_for('admin.add_service') }}" class="btn btn-primary">
+                <i class="icon-plus"></i> Добавить первую услугу
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Программы -->
+    <div class="admin-section">
+        <h2>Экологические программы ({{ programs.total }} всего)</h2>
+        
+        {% if programs.items %}
+        <div class="admin-table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Название</th>
+                        <th>Описание</th>
+                        <th>Длительность</th>
+                        <th>Финансирование</th>
+                        <th>Статус</th>
+                        <th>Дата создания</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for program in programs.items %}
+                    <tr>
+                        <td>{{ program.id }}</td>
+                        <td><strong>{{ program.name }}</strong></td>
+                        <td class="text-truncate">{{ program.description[:100] }}{% if program.description|length > 100 %}...{% endif %}</td>
+                        <td>{{ program.duration or 'Не указано' }}</td>
+                        <td>{{ program.funding or 'Не указано' }}</td>
+                        <td>
+                            <span class="status-badge {% if program.is_active %}status-active{% else %}status-inactive{% endif %}">
+                                {% if program.is_active %}Активна{% else %}Неактивна{% endif %}
+                            </span>
+                        </td>
+                        <td>{{ program.created_at.strftime('%d.%m.%Y') if program.created_at else 'Не указано' }}</td>
+                        <td class="actions">
+                            <a href="{{ url_for('admin.edit_program', id=program.id) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="icon-edit"></i> Изменить
+                            </a>
+                            <form method="POST" action="{{ url_for('admin.delete_program', id=program.id) }}" 
+                                  style="display: inline;" 
+                                  onsubmit="return confirm('Вы уверены, что хотите удалить эту программу?')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="icon-delete"></i> Удалить
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">🌱</div>
+            <h3>Программы не найдены</h3>
+            <p>Пока нет добавленных экологических программ.</p>
+            <a href="{{ url_for('admin.add_program') }}" class="btn btn-success">
+                <i class="icon-plus"></i> Добавить первую программу
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.admin-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.admin-section h2 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-size: 1.25rem;
+}
+
+.text-truncate {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.status-active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-inactive {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.actions {
+    white-space: nowrap;
+}
+
+.actions form {
+    margin-left: 0.5rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #666;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.empty-state p {
+    margin-bottom: 1.5rem;
+}
+</style>
+{% endblock %} 
