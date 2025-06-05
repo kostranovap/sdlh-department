@@ -1,238 +1,261 @@
-{% extends "admin/base.html" %}
+{% extends "base.html" %}
 
-{% block title %}Управление новостями{% endblock %}
+{% block title %}Управление новостями - Админ-панель{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Админ-панель</a></li>
+<li class="breadcrumb-item">Новости</li>
+{% endblock %}
 
 {% block content %}
-<div class="admin-content">
-    <div class="admin-header">
+<div class="container">
+    <div class="admin-page">
+    <div class="page-header">
         <h1>Управление новостями</h1>
-        <div class="admin-actions">
-            <a href="{{ url_for('admin.create_news') }}" class="btn btn-primary">
-                <i class="icon-plus"></i> Создать новость
+    </div>
+
+    <!-- Фильтры -->
+    <div class="filters-section">
+        <div class="filter-group">
+            <a href="{{ url_for('admin.news', status='all') }}" 
+               class="filter-btn {% if current_status == 'all' %}active{% endif %}">
+                Все новости
+            </a>
+            <a href="{{ url_for('admin.news', status='published') }}" 
+               class="filter-btn {% if current_status == 'published' %}active{% endif %}">
+                Опубликованные
+            </a>
+            <a href="{{ url_for('admin.news', status='draft') }}" 
+               class="filter-btn {% if current_status == 'draft' %}active{% endif %}">
+                Черновики
+            </a>
+            <a href="{{ url_for('admin.news', status='important') }}" 
+               class="filter-btn {% if current_status == 'important' %}active{% endif %}">
+                Важные
             </a>
         </div>
-    </div>
-
-    {% if news.items %}
-    <div class="admin-stats">
-        <div class="stat-item">
-            <span class="stat-number">{{ news.total }}</span>
-            <span class="stat-label">Всего новостей</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-number">{{ news.items | selectattr('is_published') | list | length }}</span>
-            <span class="stat-label">Опубликовано</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-number">{{ news.items | selectattr('is_important') | list | length }}</span>
-            <span class="stat-label">Важных</span>
+        <div class="filter-actions">
+            <a href="{{ url_for('admin.create_news') }}" class="btn-add">+ Создать новость</a>
         </div>
     </div>
 
-    <div class="admin-table-container">
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Изображение</th>
-                    <th>Заголовок</th>
-                    <th>Автор</th>
-                    <th>Просмотры</th>
-                    <th>Статус</th>
-                    <th>Дата создания</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for article in news.items %}
-                <tr>
-                    <td>{{ article.id }}</td>
-                    <td class="image-cell">
-                        {% if article.image_url %}
-                            <img src="{{ article.image_url }}" alt="Превью" class="table-image">
-                        {% else %}
-                            <div class="no-image">📰</div>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <div class="article-title">
-                            <strong>{{ article.title }}</strong>
-                            {% if article.is_important %}
-                                <span class="important-badge">Важная</span>
-                            {% endif %}
-                        </div>
-                        {% if article.summary %}
-                            <div class="article-summary">{{ article.summary[:100] }}{% if article.summary|length > 100 %}...{% endif %}</div>
-                        {% endif %}
-                    </td>
-                    <td>{{ article.author.full_name if article.author else 'Неизвестно' }}</td>
-                    <td>
-                        <span class="view-count">{{ article.view_count or 0 }}</span>
-                    </td>
-                    <td>
-                        <span class="status-badge {% if article.is_published %}status-published{% else %}status-draft{% endif %}">
-                            {% if article.is_published %}Опубликована{% else %}Черновик{% endif %}
-                        </span>
-                    </td>
-                    <td>{{ article.created_at.strftime('%d.%m.%Y %H:%M') if article.created_at else 'Не указано' }}</td>
-                    <td class="actions">
-                        <a href="{{ url_for('main.news_detail', id=article.id) }}" class="btn btn-sm btn-outline-info" target="_blank">
-                            <i class="icon-eye"></i> Просмотр
-                        </a>
-                        <a href="{{ url_for('admin.edit_news', id=article.id) }}" class="btn btn-sm btn-outline-primary">
-                            <i class="icon-edit"></i> Изменить
-                        </a>
-                        <form method="POST" action="{{ url_for('admin.delete_news', id=article.id) }}" 
-                              style="display: inline;" 
-                              onsubmit="return confirm('Вы уверены, что хотите удалить эту новость?')">
-                            <button type="submit" class="btn btn-sm btn-outline-danger">
-                                <i class="icon-delete"></i> Удалить
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    <div class="admin-section">
+        {% if news.items %}
+        <div class="news-table">
+            <div class="table-header">
+                <span>Заголовок</span>
+                <span>Автор</span>
+                <span>Статус</span>
+                <span>Дата</span>
+                <span>Действия</span>
+            </div>
+            
+            {% for article in news.items %}
+            <div class="table-row">
+                <span class="news-title">
+                    <strong>{{ article.title }}</strong>
+                    {% if article.is_important %}
+                        <span class="important-badge">ВАЖНАЯ</span>
+                    {% endif %}
+                    {% if article.content %}
+                        <small>{{ article.content[:80] }}{% if article.content|length > 80 %}...{% endif %}</small>
+                    {% endif %}
+                </span>
+                <span class="news-author">{{ article.author.full_name if article.author else 'Неизвестно' }}</span>
+                <span class="news-status status-{{ 'published' if article.is_published else 'draft' }}">
+                    {{ 'Опубликована' if article.is_published else 'Черновик' }}
+                </span>
+                <span class="news-date">{{ article.created_at.strftime('%d.%m.%Y') if article.created_at else 'Не указано' }}</span>
+                <span class="news-actions">
+                    <a href="{{ url_for('main.news_detail', id=article.id) }}" class="action-btn view-btn" title="Просмотр" target="_blank">👁</a>
+                    <a href="{{ url_for('admin.edit_news', id=article.id) }}" class="action-btn edit-btn" title="Редактировать">✏</a>
+                    <form method="POST" action="{{ url_for('admin.delete_news', id=article.id) }}" 
+                          style="display: inline;" 
+                          onsubmit="return confirm('Вы уверены, что хотите удалить эту новость?')">
+                        <button type="submit" class="action-btn delete-btn" title="Удалить">✗</button>
+                    </form>
+                </span>
+            </div>
+            {% endfor %}
+        </div>
 
-    <!-- Пагинация -->
-    {% if news.pages > 1 %}
-    <div class="pagination-container">
-        <nav class="pagination">
+        <!-- Пагинация -->
+        {% if news.pages > 1 %}
+        <div class="pagination">
             {% if news.has_prev %}
-                <a href="{{ url_for('admin.news', page=news.prev_num) }}" class="page-link">
-                    <i class="icon-arrow-left"></i> Предыдущая
-                </a>
+                <a href="{{ url_for('admin.news', page=news.prev_num, status=current_status) }}" 
+                   class="pagination-link">‹ Предыдущая</a>
             {% endif %}
             
             {% for page_num in news.iter_pages() %}
                 {% if page_num %}
                     {% if page_num != news.page %}
-                        <a href="{{ url_for('admin.news', page=page_num) }}" class="page-link">{{ page_num }}</a>
+                        <a href="{{ url_for('admin.news', page=page_num, status=current_status) }}" 
+                           class="pagination-link">{{ page_num }}</a>
                     {% else %}
-                        <span class="page-link current">{{ page_num }}</span>
+                        <span class="pagination-current">{{ page_num }}</span>
                     {% endif %}
                 {% else %}
-                    <span class="page-link disabled">...</span>
+                    <span class="pagination-ellipsis">…</span>
                 {% endif %}
             {% endfor %}
             
             {% if news.has_next %}
-                <a href="{{ url_for('admin.news', page=news.next_num) }}" class="page-link">
-                    Следующая <i class="icon-arrow-right"></i>
-                </a>
+                <a href="{{ url_for('admin.news', page=news.next_num, status=current_status) }}" 
+                   class="pagination-link">Следующая ›</a>
             {% endif %}
-        </nav>
-    </div>
-    {% endif %}
-
-    {% else %}
-    <!-- Пустое состояние -->
-    <div class="empty-state">
-        <div class="empty-icon">📰</div>
-        <h3>Новости не найдены</h3>
-        <p>Пока нет добавленных новостей департамента.</p>
-        <a href="{{ url_for('admin.create_news') }}" class="btn btn-primary btn-lg">
-            <i class="icon-plus"></i> Создать первую новость
-        </a>
-    </div>
-    {% endif %}
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <div class="empty-state">
+            <p>Новости не найдены</p>
+            <a href="{{ url_for('admin.create_news') }}" class="btn-add">+ Создать первую новость</a>
+        </div>
+                 {% endif %}
+     </div>
+</div>
 </div>
 
 <style>
-.admin-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2rem;
+/* Админ-страницы: отступы и компоновка */
+.admin-page {
+    margin: var(--spacing-2xl) 0;
 }
 
-.stat-item {
-    padding: 1.5rem;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    text-align: center;
+.page-header {
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-gray-200);
+    margin-bottom: var(--spacing-2xl);
 }
 
-.stat-number {
-    display: block;
-    font-size: 2rem;
-    font-weight: bold;
-    color: #2563eb;
-    margin-bottom: 0.5rem;
+.page-header h1 {
+    margin: 0;
+    color: var(--color-gray-800);
 }
 
-.stat-label {
-    color: #666;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.image-cell {
-    width: 60px;
-    padding: 0.5rem;
-}
-
-.table-image {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 4px;
-    border: 1px solid #e5e7eb;
-}
-
-.no-image {
-    width: 50px;
-    height: 50px;
+/* Фильтры */
+.filters-section {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    background: #f3f4f6;
-    border-radius: 4px;
-    font-size: 1.5rem;
-    color: #9ca3af;
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+    box-shadow: var(--shadow-sm);
 }
 
-.article-title {
-    margin-bottom: 0.25rem;
+.filter-group {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.filter-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+    color: var(--color-gray-600);
+    background: var(--color-gray-100);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    transition: all var(--transition-fast);
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.btn-add {
+    background: var(--color-primary);
+    color: var(--color-white);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+}
+
+.btn-add:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Таблица новостей */
+.news-table {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.table-header {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr auto;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--color-gray-50);
+    font-weight: 600;
+    color: var(--color-gray-700);
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.table-row {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr auto;
+    gap: var(--spacing-lg);
+    align-items: center;
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-gray-100);
+    transition: background-color var(--transition-fast);
+}
+
+.table-row:last-child {
+    border-bottom: none;
+}
+
+.table-row:hover {
+    background: var(--color-gray-50);
+}
+
+.news-title strong {
+    display: block;
+    color: var(--color-gray-800);
+    font-weight: 600;
+}
+
+.news-title small {
+    display: block;
+    color: var(--color-gray-600);
+    font-size: var(--font-size-xs);
+    margin-top: var(--spacing-xs);
 }
 
 .important-badge {
-    display: inline-block;
+    background: #fef3c7;
+    color: #d97706;
     padding: 2px 6px;
-    background: #fbbf24;
-    color: #92400e;
-    font-size: 0.75rem;
-    font-weight: 500;
     border-radius: 4px;
-    margin-left: 0.5rem;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    margin-left: var(--spacing-sm);
 }
 
-.article-summary {
-    font-size: 0.875rem;
-    color: #666;
-    line-height: 1.4;
-}
-
-.view-count {
-    font-weight: 500;
-    color: #059669;
-}
-
-.status-badge {
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    text-transform: uppercase;
+.news-status {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-align: center;
 }
 
 .status-published {
-    background: #dcfce7;
-    color: #166534;
+    background: #e8f5e8;
+    color: var(--color-primary);
 }
 
 .status-draft {
@@ -240,54 +263,107 @@
     color: #374151;
 }
 
-.actions {
-    white-space: nowrap;
+.news-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
 }
 
-.actions form {
-    margin-left: 0.5rem;
+.action-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all var(--transition-fast);
+}
+
+.view-btn {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.view-btn:hover {
+    background: #1976d2;
+    color: white;
+}
+
+.edit-btn {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.edit-btn:hover {
+    background: #f57c00;
+    color: white;
+}
+
+.delete-btn {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.delete-btn:hover {
+    background: #d32f2f;
+    color: white;
+}
+
+/* Пагинация */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-2xl);
+}
+
+.pagination-link, .pagination-current {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+    min-width: 40px;
+    text-align: center;
+}
+
+.pagination-link {
+    background: var(--color-white);
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-200);
+}
+
+.pagination-link:hover {
+    background: var(--color-primary);
+    color: var(--color-white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.pagination-current {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.pagination-ellipsis {
+    color: var(--color-gray-400);
+    padding: var(--spacing-sm);
 }
 
 .empty-state {
     text-align: center;
-    padding: 4rem 2rem;
-    color: #666;
-}
-
-.empty-icon {
-    font-size: 4rem;
-    margin-bottom: 1.5rem;
-}
-
-.empty-state h3 {
-    margin-bottom: 0.5rem;
-    color: #333;
-    font-size: 1.5rem;
+    padding: var(--spacing-2xl);
+    color: var(--color-gray-600);
 }
 
 .empty-state p {
-    margin-bottom: 2rem;
-    font-size: 1.1rem;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .admin-stats {
-        grid-template-columns: 1fr;
-    }
-    
-    .admin-table {
-        font-size: 0.875rem;
-    }
-    
-    .image-cell {
-        display: none;
-    }
-    
-    .actions .btn {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
-    }
+    margin-bottom: var(--spacing-lg);
 }
 </style>
 {% endblock %} 

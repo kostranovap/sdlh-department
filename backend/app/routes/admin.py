@@ -219,7 +219,7 @@ def news():
     )
     
     return render_template('admin/news.html', 
-                         news_items=news_items,
+                         news=news_items,
                          current_status=status)
 
 @admin.route('/news/create', methods=['GET', 'POST'])

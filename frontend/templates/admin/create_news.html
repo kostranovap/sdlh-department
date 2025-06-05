@@ -5,7 +5,7 @@
 {% block breadcrumb_items %}
 <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Админ-панель</a></li>
 <li class="breadcrumb-item"><a href="{{ url_for('admin.news') }}">Новости</a></li>
-<li class="breadcrumb-item">Добавить новость</li>
+<li class="breadcrumb-item">Добавить</li>
 {% endblock %}
 
 {% block content %}
@@ -13,7 +13,9 @@
     <div class="admin-page">
         <div class="page-header">
             <h1>Добавить новость</h1>
-            <a href="{{ url_for('admin.news') }}" class="btn-back">← Назад к списку</a>
+            <a href="{{ url_for('admin.news') }}" class="btn btn-outline">
+                <i class="icon">←</i> К списку
+            </a>
         </div>
 
         <div class="form-container">

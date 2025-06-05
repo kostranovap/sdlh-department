@@ -5,7 +5,7 @@
 {% block breadcrumb_items %}
 <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Админ-панель</a></li>
 <li class="breadcrumb-item"><a href="{{ url_for('admin.news') }}">Новости</a></li>
-<li class="breadcrumb-item">Редактировать новость</li>
+<li class="breadcrumb-item">Редактировать</li>
 {% endblock %}
 
 {% block content %}
@@ -15,107 +15,185 @@
             <h1>Редактировать новость</h1>
             <div class="header-actions">
                 <a href="{{ url_for('main.news_detail', id=news_item.id) }}" 
-                   class="btn-secondary" target="_blank">Просмотр</a>
-                <a href="{{ url_for('admin.news') }}" class="btn-back">← Назад к списку</a>
+                   class="btn btn-secondary" target="_blank">
+                    <i class="icon">👁</i> Просмотр
+                </a>
+                <a href="{{ url_for('admin.news') }}" class="btn btn-outline">
+                    <i class="icon">←</i> К списку
+                </a>
             </div>
         </div>
 
         <div class="form-container">
             <form method="POST" enctype="multipart/form-data" class="admin-form">
                 <div class="form-group">
-                    <label for="title" class="form-label">Заголовок *</label>
+                    <label for="title" class="form-label">Заголовок новости *</label>
                     <input type="text" id="title" name="title" class="form-input" 
-                           value="{{ news_item.title }}" required>
+                           value="{{ news_item.title }}" required 
+                           placeholder="Введите заголовок новости">
                 </div>
 
                 <div class="form-group">
-                    <label for="content" class="form-label">Содержание *</label>
-                    <textarea id="content" name="content" class="form-textarea" rows="15" required>{{ news_item.content }}</textarea>
+                    <label for="content" class="form-label">Содержание новости *</label>
+                    <textarea id="content" name="content" class="form-textarea" rows="12" required 
+                              placeholder="Введите текст новости...">{{ news_item.content }}</textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="image" class="form-label">Изображение</label>
-                    <div class="file-upload-area" id="fileUploadArea">
+                    <label for="image" class="form-label">Изображение новости</label>
+                    <div class="file-upload-area">
                         <input type="file" id="image" name="image" class="form-file" 
                                accept="image/*" onchange="previewImage(this)">
                         
                         {% if news_item.image_url %}
                         <div class="current-image">
-                            <h5>Текущее изображение:</h5>
-                            <div class="image-preview" id="currentImage">
-                                <img src="{{ news_item.image_url }}" alt="Текущее изображение">
+                            <div class="image-preview-container">
+                                <img src="{{ news_item.image_url }}" alt="Текущее изображение" class="current-img">
                                 <div class="image-overlay">
-                                    <span>Нажмите для замены</span>
+                                    <span>Нажмите для замены изображения</span>
                                 </div>
                             </div>
                         </div>
                         {% else %}
                         <div class="upload-placeholder">
-                            <i class="icon-upload">📁</i>
-                            <p>Нажмите или перетащите изображение</p>
-                            <small>Поддерживаемые форматы: JPG, PNG, WEBP, GIF</small>
+                            <div class="upload-icon">📁</div>
+                            <p>Загрузить изображение</p>
+                            <small>JPG, PNG, WEBP до 5 МБ</small>
                         </div>
                         {% endif %}
                         
-                        <div class="image-preview" id="newImagePreview" style="display: none;">
-                            <h5>Новое изображение:</h5>
-                            <img id="previewImg" src="" alt="Предпросмотр">
-                            <button type="button" onclick="removeNewImage()" class="remove-image">✕</button>
+                        <div class="new-image-preview" id="newImagePreview" style="display: none;">
+                            <img id="previewImg" src="" alt="Предпросмотр" class="preview-img">
+                            <button type="button" onclick="removeNewImage()" class="remove-btn">✕</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-checkbox">
+                <div class="form-options">
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
                             <input type="checkbox" name="is_published" 
                                    {% if news_item.is_published %}checked{% endif %}>
-                            <span class="checkmark"></span>
-                            Опубликовано
+                            <span class="checkbox-custom"></span>
+                            <span class="checkbox-text">Опубликовать новость</span>
                         </label>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-checkbox">
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
                             <input type="checkbox" name="is_important" 
                                    {% if news_item.is_important %}checked{% endif %}>
-                            <span class="checkmark"></span>
-                            Важная новость
+                            <span class="checkbox-custom"></span>
+                            <span class="checkbox-text">Важная новость</span>
                         </label>
                     </div>
                 </div>
 
-                <div class="form-meta">
-                    <div class="meta-info">
-                        <p><strong>Автор:</strong> {{ news_item.author.full_name or news_item.author.username }}</p>
-                        <p><strong>Создано:</strong> {{ news_item.created_at.strftime('%d.%m.%Y в %H:%M') }}</p>
-                        {% if news_item.updated_at != news_item.created_at %}
-                        <p><strong>Обновлено:</strong> {{ news_item.updated_at.strftime('%d.%m.%Y в %H:%M') }}</p>
-                        {% endif %}
-                        <p><strong>Просмотров:</strong> {{ news_item.view_count }}</p>
+                <div class="meta-info">
+                    <div class="meta-card">
+                        <h4>Информация о новости</h4>
+                        <div class="meta-grid">
+                            <div class="meta-item">
+                                <strong>Автор:</strong> 
+                                <span>{{ news_item.author.full_name or news_item.author.username }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <strong>Создано:</strong> 
+                                <span>{{ news_item.created_at.strftime('%d.%m.%Y в %H:%M') }}</span>
+                            </div>
+                            {% if news_item.updated_at != news_item.created_at %}
+                            <div class="meta-item">
+                                <strong>Обновлено:</strong> 
+                                <span>{{ news_item.updated_at.strftime('%d.%m.%Y в %H:%M') }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="meta-item">
+                                <strong>Просмотров:</strong> 
+                                <span>{{ news_item.view_count or 0 }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="btn-primary">
-                        💾 Сохранить изменения
+                    <button type="submit" class="btn btn-primary">
+                        <i class="icon">💾</i> Сохранить изменения
                     </button>
-                    <a href="{{ url_for('admin.news') }}" class="btn-secondary">Отмена</a>
+                    <a href="{{ url_for('admin.news') }}" class="btn btn-secondary">
+                        Отмена
+                    </a>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<script>
+function previewImage(input) {
+    const file = input.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('newImagePreview');
+            const img = document.getElementById('previewImg');
+            img.src = e.target.result;
+            preview.style.display = 'block';
+            
+            // Скрываем placeholder
+            const placeholder = document.querySelector('.upload-placeholder');
+            if (placeholder) placeholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function removeNewImage() {
+    const preview = document.getElementById('newImagePreview');
+    const input = document.getElementById('image');
+    const placeholder = document.querySelector('.upload-placeholder');
+    
+    preview.style.display = 'none';
+    input.value = '';
+    if (placeholder) placeholder.style.display = 'block';
+}
+</script>
+
 <style>
+.admin-page {
+    margin: 2rem 0;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--color-gray-100);
+}
+
+.page-header h1 {
+    margin: 0;
+    color: var(--color-gray-800);
+    font-size: 1.75rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
 .form-container {
     max-width: 800px;
     margin: 0 auto;
 }
 
-.header-actions {
-    display: flex;
-    gap: 1rem;
+.admin-form {
+    background: var(--color-white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid var(--color-gray-100);
 }
 
 .form-group {
@@ -126,42 +204,45 @@
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #333;
+    color: var(--color-gray-700);
+    font-size: 0.9rem;
 }
 
 .form-input, .form-textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: border-color 0.15s;
+    border: 2px solid var(--color-gray-200);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
     font-family: inherit;
 }
 
 .form-input:focus, .form-textarea:focus {
     outline: none;
-    border-color: #2e5b31;
-    box-shadow: 0 0 0 2px rgba(46, 91, 49, 0.1);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(46, 91, 49, 0.1);
 }
 
 .form-textarea {
     resize: vertical;
-    min-height: 300px;
-    line-height: 1.5;
+    min-height: 200px;
+    line-height: 1.6;
 }
 
 .file-upload-area {
     position: relative;
-    border: 2px dashed #ddd;
+    border: 2px dashed var(--color-gray-300);
     border-radius: 8px;
-    padding: 2rem;
+    padding: 1.5rem;
     text-align: center;
-    transition: border-color 0.15s;
+    transition: all 0.2s ease;
+    cursor: pointer;
 }
 
 .file-upload-area:hover {
-    border-color: #2e5b31;
+    border-color: var(--color-primary);
+    background: rgba(46, 91, 49, 0.02);
 }
 
 .form-file {
@@ -174,23 +255,40 @@
     cursor: pointer;
 }
 
-.current-image h5, .image-preview h5 {
-    margin: 0 0 1rem 0;
-    font-size: 14px;
-    color: #333;
-    text-align: left;
+.upload-placeholder {
+    pointer-events: none;
 }
 
-.current-image .image-preview {
+.upload-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.upload-placeholder p {
+    margin: 0 0 0.25rem 0;
+    font-weight: 500;
+    color: var(--color-gray-600);
+}
+
+.upload-placeholder small {
+    color: var(--color-gray-500);
+    font-size: 0.8rem;
+}
+
+.current-image {
+    pointer-events: none;
+}
+
+.image-preview-container {
     position: relative;
     display: inline-block;
     cursor: pointer;
 }
 
-.current-image img {
-    max-width: 300px;
-    max-height: 200px;
-    border-radius: 4px;
+.current-img {
+    max-width: 250px;
+    max-height: 150px;
+    border-radius: 6px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
@@ -207,95 +305,138 @@
     justify-content: center;
     opacity: 0;
     transition: opacity 0.2s;
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
-.current-image:hover .image-overlay {
+.image-preview-container:hover .image-overlay {
     opacity: 1;
 }
 
-.upload-placeholder {
-    color: #666;
+.new-image-preview {
+    position: relative;
+    display: inline-block;
+    margin-top: 1rem;
 }
 
-.upload-placeholder i {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-#newImagePreview img {
-    max-width: 300px;
-    max-height: 200px;
-    border-radius: 4px;
+.preview-img {
+    max-width: 250px;
+    max-height: 150px;
+    border-radius: 6px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.remove-image {
+.remove-btn {
     position: absolute;
     top: -8px;
     right: -8px;
     width: 24px;
     height: 24px;
-    border-radius: 50%;
-    background: #dc3545;
-    color: white;
     border: none;
+    background: var(--color-danger);
+    color: white;
+    border-radius: 50%;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 0.8rem;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.form-row {
+.form-options {
     display: flex;
     gap: 2rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--color-gray-50);
+    border-radius: 8px;
 }
 
-.form-checkbox {
+.checkbox-group {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-label {
     display: flex;
     align-items: center;
     cursor: pointer;
-    font-weight: normal;
+    font-size: 0.9rem;
 }
 
-.form-checkbox input {
+.checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--color-gray-300);
+    border-radius: 4px;
     margin-right: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
 }
 
-.form-meta {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom::after {
+    content: '✓';
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.meta-info {
+    margin-bottom: 2rem;
+}
+
+.meta-card {
+    background: var(--color-gray-50);
     padding: 1.5rem;
-    margin: 2rem 0;
+    border-radius: 8px;
+    border: 1px solid var(--color-gray-200);
 }
 
-.meta-info p {
-    margin: 0 0 0.5rem 0;
-    font-size: 14px;
-    color: #495057;
+.meta-card h4 {
+    margin: 0 0 1rem 0;
+    color: var(--color-gray-700);
+    font-size: 1rem;
 }
 
-.meta-info p:last-child {
-    margin-bottom: 0;
+.meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+}
+
+.meta-item {
+    font-size: 0.9rem;
+}
+
+.meta-item strong {
+    color: var(--color-gray-600);
 }
 
 .form-actions {
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #eee;
     display: flex;
     gap: 1rem;
+    justify-content: flex-start;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-gray-200);
 }
 
-.btn-primary, .btn-secondary {
+.btn {
     padding: 0.75rem 1.5rem;
-    border-radius: 4px;
+    border-radius: 8px;
     text-decoration: none;
-    font-weight: 500;
-    transition: all 0.15s;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
     border: none;
     cursor: pointer;
     display: inline-flex;
@@ -304,88 +445,40 @@
 }
 
 .btn-primary {
-    background: #2e5b31;
+    background: var(--color-primary);
     color: white;
+    box-shadow: 0 2px 4px rgba(46, 91, 49, 0.2);
 }
 
 .btn-primary:hover {
-    background: #1e3e21;
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(46, 91, 49, 0.3);
 }
 
 .btn-secondary {
-    background: #6c757d;
-    color: white;
+    background: var(--color-gray-100);
+    color: var(--color-gray-700);
 }
 
 .btn-secondary:hover {
-    background: #545b62;
+    background: var(--color-gray-200);
+    transform: translateY(-1px);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--color-gray-600);
+    border: 2px solid var(--color-gray-200);
+}
+
+.btn-outline:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.icon {
+    font-style: normal;
 }
 </style>
-
-<script>
-// Превью изображения
-function previewImage(input) {
-    const file = input.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('previewImg').src = e.target.result;
-            document.getElementById('newImagePreview').style.display = 'block';
-            
-            // Скрываем текущее изображение если есть
-            const currentImage = document.getElementById('currentImage');
-            if (currentImage) {
-                currentImage.style.display = 'none';
-            }
-            
-            const placeholder = document.querySelector('.upload-placeholder');
-            if (placeholder) {
-                placeholder.style.display = 'none';
-            }
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-// Удаление нового изображения
-function removeNewImage() {
-    document.getElementById('image').value = '';
-    document.getElementById('newImagePreview').style.display = 'none';
-    
-    // Показываем обратно текущее изображение или placeholder
-    const currentImage = document.getElementById('currentImage');
-    if (currentImage) {
-        currentImage.style.display = 'block';
-    } else {
-        const placeholder = document.querySelector('.upload-placeholder');
-        if (placeholder) {
-            placeholder.style.display = 'block';
-        }
-    }
-}
-
-// Drag & Drop
-const fileUploadArea = document.getElementById('fileUploadArea');
-
-fileUploadArea.addEventListener('dragover', function(e) {
-    e.preventDefault();
-    this.style.borderColor = '#2e5b31';
-});
-
-fileUploadArea.addEventListener('dragleave', function(e) {
-    e.preventDefault();
-    this.style.borderColor = '#ddd';
-});
-
-fileUploadArea.addEventListener('drop', function(e) {
-    e.preventDefault();
-    this.style.borderColor = '#ddd';
-    
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-        document.getElementById('image').files = files;
-        previewImage(document.getElementById('image'));
-    }
-});
-</script>
 {% endblock %} 
