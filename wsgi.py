@@ -349,158 +349,165 @@ def load_mysql_data():
 
 @app.route('/auto-load-data-from-json-secret-route')
 def auto_load_data():
-    """Автоматическая загрузка данных из JSON файлов в репозитории"""
+    """Автоматическая загрузка тестовых данных"""
     try:
-        import json
-        import os
-        
         with app.app_context():
-            # Путь к папке с экспортированными данными
-            export_folder = os.path.join(os.path.dirname(__file__), 'mysql_export')
+            # Создаем таблицы
+            db.create_all()
             
-            if not os.path.exists(export_folder):
-                return f"❌ Папка mysql_export не найдена по пути: {export_folder}"
+            # Проверяем, есть ли уже данные
+            if News.query.first():
+                return "✅ База данных уже содержит новости! <br><a href='/'>На главную</a> | <a href='/admin'>Админка</a>"
             
-            # Очищаем существующие данные
-            db.session.query(Application).delete()
-            db.session.query(News).delete()
-            db.session.query(Article).delete()
-            db.session.query(Program).delete()
-            db.session.query(Service).delete()
-            db.session.query(User).delete()
-            db.session.commit()
+            # Создание пользователей
+            admin = User(
+                username='admin',
+                email='admin@dlh.gov.ru',
+                full_name='Администратор СДЛХ',
+                role='admin',
+                is_active=True
+            )
+            admin.set_password('admin123')
             
-            loaded_counts = {}
+            user = User(
+                username='user',
+                email='user@example.com',
+                full_name='Тестовый пользователь',
+                role='user',
+                is_active=True
+            )
+            user.set_password('user123')
             
-            def load_json_file(filename):
-                """Загружает данные из JSON файла"""
-                filepath = os.path.join(export_folder, filename)
-                if not os.path.exists(filepath):
-                    return []
-                
-                with open(filepath, 'r', encoding='utf-8') as f:
-                    return json.load(f)
+            db.session.add(admin)
+            db.session.add(user)
+            db.session.commit()  # Коммитим пользователей чтобы получить ID
             
-            # Загружаем пользователей с сохранением оригинальных ID
-            users_data = load_json_file('users.json')
-            for user_data in users_data:
-                user = User(
-                    id=user_data['id'],  # Сохраняем оригинальный ID
-                    username=user_data['username'],
-                    email=user_data['email'],
-                    full_name=user_data.get('full_name', ''),
-                    role=user_data.get('role', 'user'),
-                    is_active=user_data.get('is_active', True),
-                    created_at=datetime.fromisoformat(user_data['created_at'].replace('Z', '+00:00')) if user_data.get('created_at') else datetime.utcnow()
+            # Создание услуг
+            services = [
+                Service(
+                    name='Разрешение на заготовку древесины',
+                    description='Получение разрешения на заготовку древесины для физических и юридических лиц',
+                    requirements='Документы на право пользования лесным участком',
+                    documents_needed='Паспорт, документы на участок, план лесозаготовок',
+                    processing_time='30 рабочих дней',
+                    cost='Государственная пошлина',
+                    responsible_department='Отдел лесопользования',
+                    contact_info='Тел: +7 (495) 123-45-67',
+                    is_active=True
+                ),
+                Service(
+                    name='Лесопатологическое обследование',
+                    description='Проведение обследования лесных участков на предмет болезней и вредителей',
+                    requirements='Заявление от собственника участка',
+                    documents_needed='Заявление, документы на участок',
+                    processing_time='14 рабочих дней',
+                    cost='Бесплатно',
+                    responsible_department='Отдел защиты леса',
+                    contact_info='Тел: +7 (495) 123-45-68',
+                    is_active=True
+                ),
+                Service(
+                    name='Согласование проектов строительства',
+                    description='Согласование проектов строительства в лесных массивах',
+                    requirements='Проектная документация',
+                    documents_needed='Проект, экологическая экспертиза',
+                    processing_time='45 рабочих дней',
+                    cost='По тарифам',
+                    responsible_department='Отдел контроля',
+                    contact_info='Тел: +7 (495) 123-45-69',
+                    is_active=True
                 )
-                user.password_hash = user_data.get('password_hash', '')
-                db.session.add(user)
-            loaded_counts['users'] = len(users_data)
+            ]
             
-            # Загружаем услуги с сохранением оригинальных ID
-            services_data = load_json_file('services.json')
-            for service_data in services_data:
-                service = Service(
-                    id=service_data['id'],  # Сохраняем оригинальный ID
-                    name=service_data['name'],
-                    description=service_data.get('description', ''),
-                    requirements=service_data.get('requirements', ''),
-                    documents_needed=service_data.get('documents_needed', ''),
-                    processing_time=service_data.get('processing_time', ''),
-                    cost=service_data.get('cost', ''),
-                    responsible_department=service_data.get('responsible_department', ''),
-                    contact_info=service_data.get('contact_info', ''),
-                    is_active=service_data.get('is_active', True),
-                    created_at=datetime.fromisoformat(service_data['created_at'].replace('Z', '+00:00')) if service_data.get('created_at') else datetime.utcnow()
-                )
+            for service in services:
                 db.session.add(service)
-            loaded_counts['services'] = len(services_data)
-            
-            # Загружаем программы с сохранением оригинальных ID
-            programs_data = load_json_file('programs.json')
-            for program_data in programs_data:
-                program = Program(
-                    id=program_data['id'],  # Сохраняем оригинальный ID
-                    name=program_data['name'],
-                    description=program_data.get('description', ''),
-                    objectives=program_data.get('objectives', ''),
-                    requirements=program_data.get('requirements', ''),
-                    benefits=program_data.get('benefits', ''),
-                    duration=program_data.get('duration', ''),
-                    funding=program_data.get('funding', ''),
-                    responsible_department=program_data.get('responsible_department', ''),
-                    contact_info=program_data.get('contact_info', ''),
-                    is_active=program_data.get('is_active', True),
-                    created_at=datetime.fromisoformat(program_data['created_at'].replace('Z', '+00:00')) if program_data.get('created_at') else datetime.utcnow()
+                
+            # Создание программ
+            programs = [
+                Program(
+                    name='Зеленая планета',
+                    description='Программа по лесовосстановлению и охране окружающей среды',
+                    objectives='Восстановление лесных массивов, экологическое просвещение',
+                    requirements='Возраст от 18 лет, экологическое образование приветствуется',
+                    benefits='Сертификат участника, льготы при трудоустройстве',
+                    duration='Круглогодично',
+                    funding='Федеральный бюджет',
+                    responsible_department='Отдел экологии',
+                    contact_info='ecology@dlh.gov.ru',
+                    is_active=True
+                ),
+                Program(
+                    name='Лесные стражи',
+                    description='Волонтерская программа по охране лесов от пожаров',
+                    objectives='Предотвращение лесных пожаров, патрулирование',
+                    requirements='Возраст от 21 года, физическая подготовка',
+                    benefits='Обучение, экипировка, страховка',
+                    duration='Апрель-октябрь',
+                    funding='Региональный бюджет',
+                    responsible_department='Служба пожарной безопасности',
+                    contact_info='fire@dlh.gov.ru',
+                    is_active=True
                 )
+            ]
+            
+            for program in programs:
                 db.session.add(program)
-            loaded_counts['programs'] = len(programs_data)
             
-            # Коммитим базовые данные ПЕРЕД заявлениями
-            db.session.commit()
-            
-            # Загружаем новости с сохранением оригинальных ID
-            news_data = load_json_file('news.json')
-            for news_item in news_data:
-                news = News(
-                    id=news_item['id'],  # Сохраняем оригинальный ID
-                    title=news_item['title'],
-                    content=news_item.get('content', ''),
-                    summary=news_item.get('summary', ''),
-                    image_url=news_item.get('image_url', ''),
-                    is_published=news_item.get('is_published', True),
-                    is_important=news_item.get('is_important', False),
-                    view_count=news_item.get('view_count', 0),
-                    author_id=news_item.get('author_id', 1),
-                    created_at=datetime.fromisoformat(news_item['created_at'].replace('Z', '+00:00')) if news_item.get('created_at') else datetime.utcnow(),
-                    updated_at=datetime.fromisoformat(news_item['updated_at'].replace('Z', '+00:00')) if news_item.get('updated_at') else datetime.utcnow()
+            # Создание новостей
+            news_items = [
+                News(
+                    title='Запуск новой программы лесовосстановления',
+                    content='Департамент лесного хозяйства объявляет о запуске масштабной программы лесовосстановления. В рамках программы планируется высадить более 100 тысяч деревьев на территории региона. Программа будет реализована в несколько этапов и продлится до конца текущего года.',
+                    summary='Новая программа направлена на восстановление лесных массивов',
+                    is_published=True,
+                    is_important=True,
+                    author_id=admin.id
+                ),
+                News(
+                    title='Итоги работы за первое полугодие',
+                    content='Подведены итоги работы департамента за первое полугодие. Выполнены все плановые показатели по лесовосстановлению и охране лесов. За отчетный период было обработано более 500 заявлений граждан, проведено 25 лесопатологических обследований.',
+                    summary='Отчет о работе департамента',
+                    is_published=True,
+                    is_important=False,
+                    author_id=admin.id
+                ),
+                News(
+                    title='Профилактика лесных пожаров',
+                    content='В связи с наступлением пожароопасного периода департамент напоминает о правилах поведения в лесу и мерах предосторожности. Запрещается разводить костры, курить в лесу, оставлять мусор. Нарушители будут привлечены к административной ответственности.',
+                    summary='Важная информация о пожарной безопасности',
+                    is_published=True,
+                    is_important=True,
+                    author_id=admin.id
+                ),
+                News(
+                    title='Новые экологические инициативы',
+                    content='Департамент запускает серию новых экологических инициатив, направленных на сохранение биоразнообразия региона. В программу входят мероприятия по охране редких видов животных и растений.',
+                    summary='Экологические программы департамента',
+                    is_published=True,
+                    is_important=False,
+                    author_id=admin.id
+                ),
+                News(
+                    title='Цифровизация лесного хозяйства',
+                    content='Департамент внедряет современные цифровые технологии для повышения эффективности управления лесными ресурсами. Новая система позволит в режиме реального времени отслеживать состояние лесов.',
+                    summary='Внедрение новых технологий',
+                    is_published=True,
+                    is_important=False,
+                    author_id=admin.id
                 )
-                db.session.add(news)
-            loaded_counts['news'] = len(news_data)
+            ]
             
-            # Загружаем статьи с сохранением оригинальных ID
-            articles_data = load_json_file('articles.json')
-            for article_data in articles_data:
-                if article_data:  # Проверяем что данные не пустые
-                    article = Article(
-                        id=article_data['id'],  # Сохраняем оригинальный ID
-                        title=article_data['title'],
-                        content=article_data.get('content', ''),
-                        summary=article_data.get('summary', ''),
-                        page=article_data.get('page', ''),
-                        category=article_data.get('category', ''),
-                        is_published=article_data.get('is_published', True),
-                        author_id=article_data.get('author_id', 1),
-                        created_at=datetime.fromisoformat(article_data['created_at'].replace('Z', '+00:00')) if article_data.get('created_at') else datetime.utcnow(),
-                        updated_at=datetime.fromisoformat(article_data['updated_at'].replace('Z', '+00:00')) if article_data.get('updated_at') else datetime.utcnow()
-                    )
-                    db.session.add(article)
-            loaded_counts['articles'] = len([a for a in articles_data if a])
-            
-            # Загружаем заявления с сохранением оригинальных ID
-            applications_data = load_json_file('applications.json')
-            for app_data in applications_data:
-                application = Application(
-                    id=app_data['id'],  # Сохраняем оригинальный ID
-                    full_name=app_data['full_name'],
-                    email=app_data.get('email', ''),
-                    phone=app_data.get('phone', ''),
-                    service_id=app_data.get('service_id'),
-                    program_id=app_data.get('program_id'),
-                    description=app_data.get('message', ''),
-                    application_type=app_data.get('application_type', 'service'),
-                    status=app_data.get('status', 'new'),
-                    created_at=datetime.fromisoformat(app_data['created_at'].replace('Z', '+00:00')) if app_data.get('created_at') else datetime.utcnow()
-                )
-                db.session.add(application)
-            loaded_counts['applications'] = len(applications_data)
+            for news_item in news_items:
+                db.session.add(news_item)
             
             db.session.commit()
             
             # Форматируем красивый ответ
-            result = "✅ Данные успешно загружены из JSON файлов!<br><br>📊 <strong>Статистика:</strong><br>"
-            for table, count in loaded_counts.items():
-                result += f"• {table}: {count} записей<br>"
+            result = "✅ База данных успешно инициализирована!<br><br>📊 <strong>Создано:</strong><br>"
+            result += f"• Пользователи: 2 (admin, user)<br>"
+            result += f"• Услуги: {len(services)}<br>"
+            result += f"• Программы: {len(programs)}<br>"
+            result += f"• Новости: {len(news_items)}<br>"
             
             result += "<br>🎯 <strong>Что дальше:</strong><br>"
             result += "• Войдите в админку: <a href='/admin'>Админка</a><br>"
